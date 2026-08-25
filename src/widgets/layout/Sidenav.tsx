@@ -62,7 +62,6 @@ export default function Sidenav() {
 
   const sideNavType = sidenavTypeMap[sidenavType];
 
-
   return (
     <Drawer
       variant="permanent"

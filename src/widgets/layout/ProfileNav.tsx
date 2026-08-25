@@ -134,8 +134,10 @@ export default function ProfileNav({
             <ListItemText
               primary="My Profile"
               sx={{
-                fontSize: "0.8125rem",
-                fontWeight: 500,
+                "& .MuiListItemText-primary": {
+                  fontSize: "0.8125rem",
+                  fontWeight: isProfileActive ? 600 : 500,
+                },
               }}
             />
           </ListItemButton>
@@ -169,8 +171,10 @@ export default function ProfileNav({
             <ListItemText
               primary="Logout"
               sx={{
-                fontSize: "0.8125rem",
-                fontWeight: 500,
+                "& .MuiListItemText-primary": {
+                  fontSize: "0.8125rem",
+                  fontWeight: isProfileActive ? 600 : 500,
+                },
               }}
             />
           </ListItemButton>
