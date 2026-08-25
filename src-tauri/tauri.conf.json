@@ -1,0 +1,86 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+
+  "productName": "DawaKhana MIS",
+  "version": "0.1.0",
+  "identifier": "com.dawakhana.mis",
+
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+
+  "app": {
+    "withGlobalTauri": false,
+
+    "windows": [
+      {
+        "label": "main",
+        "title": "DawaKhana MIS",
+
+        "width": 1440,
+        "height": 900,
+
+        "minWidth": 1100,
+        "minHeight": 700,
+
+        "resizable": true,
+        "fullscreen": false,
+        "center": true,
+
+        "decorations": true,
+
+        "transparent": false,
+
+        "shadow": true,
+
+        "focus": true
+      }
+    ],
+
+    "security": {
+      "csp": null
+    }
+  },
+
+  "bundle": {
+    "active": true,
+
+    "targets": [
+      "appimage",
+      "deb",
+      "nsis",
+      "msi",
+      "dmg"
+    ],
+
+    "category": "Business",
+
+    "shortDescription": "Pharmacy Management System",
+
+    "longDescription": "DawaKhana MIS is a modern pharmacy management system for managing medicines, inventory, purchases, sales, invoices, customers, suppliers, and pharmacy operations.",
+
+    "copyright": "© 2026 DawaKhana",
+
+    "license": "MIT",
+
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+
+    "windows": {
+      "nsis": {
+        "displayLanguageSelector": true,
+        "installMode": "perMachine",
+        "startMenuFolder": "DawaKhana MIS",
+        "installerIcon": "icons/icon.ico"
+      }
+    }
+  }
+}
