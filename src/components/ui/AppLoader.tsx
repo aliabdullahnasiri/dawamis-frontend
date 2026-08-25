@@ -17,7 +17,7 @@ export default function AppLoader() {
         zIndex: 9999,
       }}
     >
-      <CircularProgress size={84} thickness={8} color="primary" />
+      <CircularProgress size={84} thickness={10} color="primary" />
     </Box>
   );
 }
