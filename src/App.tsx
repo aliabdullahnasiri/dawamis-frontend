@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Route, Routes , Navigate} from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 
 import { Dashboard } from "./layouts/Dashboard";
 
 import "./App.css";
 
 import AppLoader from "@/components/ui/AppLoader";
+
 function App() {
   const [loading, setLoading] = useState(true);
 

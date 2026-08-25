@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { Route, Routes } from "react-router-dom";
+import { Routes } from "react-router-dom";
 
 import SettingsIcon from "@mui/icons-material/Settings";
 import { IconButton } from "@mui/material";
@@ -9,7 +9,8 @@ import { useMaterialController } from "@/context/useMaterialController";
 import Configurator from "@/widgets/layout/Configurator.tsx";
 import Sidenav from "@/widgets/layout/Sidenav.tsx";
 
-import { routes } from "@/constants/routes";
+import { routes} from "@/constants/routes";
+import { renderRoutes } from "@/utils/renderRoutes";
 
 import { useMediaQuery, useTheme } from "@mui/material";
 import { useEffect } from "react";
@@ -86,12 +87,8 @@ export function Dashboard() {
         }}
       >
         <Routes>
-          {routes.map(
-            ({ layout, pages }) =>
-              layout === "dashboard" &&
-              pages.map(({ path, element }) => (
-                <Route path={path} element={element} />
-              ))
+          {routes.map(({ layout, pages }) =>
+            layout === "dashboard" ? renderRoutes(pages) : null,
           )}
         </Routes>
       </Box>
