@@ -44,8 +44,6 @@ export default function ProfileNav({
 
   const isProfileActive = location.pathname == "/profile";
 
-  const isOpen = isProfileActive|| open;
-
   return (
     <Box>
       <ListItemButton
@@ -103,7 +101,7 @@ export default function ProfileNav({
         )}
       </ListItemButton>
 
-      <Collapse in={!isMini && isOpen} timeout="auto" unmountOnExit>
+      <Collapse in={!isMini && open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {/* Profile */}
           <ListItemButton
