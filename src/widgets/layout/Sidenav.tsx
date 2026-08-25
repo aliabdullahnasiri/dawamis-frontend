@@ -1,20 +1,19 @@
 import { Box, Divider, Drawer, List, Typography } from "@mui/material";
 
 import NavItem from "@/components/NavItem";
-import { type RouteItem, routes } from "@/constants/routes";
+import { routes, type RouteItem } from "@/constants/routes";
 
 import { useMaterialController } from "@/context/useMaterialController";
 
-import { useState, useMemo } from "react";
-import { setSidenavHovered } from "@/context/materialActions";
-import ProfileNav from "@/widgets/layout/ProfileNav";
 import logoDark from "@/assets/img/logo-ct-dark.png";
 import logoLight from "@/assets/img/logo-ct.png";
+import { setSidenavHovered } from "@/context/materialActions";
+import ProfileNav from "@/widgets/layout/ProfileNav";
+import { useMemo, useState } from "react";
 
-function findActiveParent(
-  items: RouteItem[],
-  pathname: string,
-): string | null {
+import { sidenavTypeMap } from "@/constants/sidenav";
+
+function findActiveParent(items: RouteItem[], pathname: string): string | null {
   for (const item of items) {
     if (
       item.children?.some(
@@ -40,16 +39,15 @@ function findActiveParent(
 const DRAWER_WIDTH = 250;
 const MINI_DRAWER_WIDTH = 80;
 
-const dashboardRoutes = routes.find(
-  (route) => route.layout === "dashboard",
-);
+const dashboardRoutes = routes.find((route) => route.layout === "dashboard");
 
 const navigation = dashboardRoutes?.pages ?? [];
 
 export default function Sidenav() {
   const [controller, dispatch] = useMaterialController();
 
-  const { openSidenav, isMini, darkMode, sidenavColor } = controller;
+  const { openSidenav, isMini, darkMode, sidenavColor, sidenavType } =
+    controller;
 
   const activeParent = useMemo(
     () => findActiveParent(navigation, location.pathname),
@@ -61,6 +59,9 @@ export default function Sidenav() {
   const handleMenuToggle = (label: string) => {
     setOpenMenu((previous) => (previous === label ? null : label));
   };
+
+  const sideNavType = sidenavTypeMap[sidenavType];
+
 
   return (
     <Drawer
@@ -79,10 +80,13 @@ export default function Sidenav() {
           height: "calc(100% - 32px)",
           border: "none",
           boxShadow:
-            "0 4px 6px -1px rgba(0,0,0,.06), 0 2px 4px -1px rgba(0,0,0,.04)",
+            sidenavType === "transparent"
+              ? "none"
+              : "0 4px 6px -1px rgba(0,0,0,.06), 0 2px 4px -1px rgba(0,0,0,.04)",
           transform: openSidenav ? "translateX(0)" : "translateX(-120%)",
           transition: "width 300ms ease, transform 300ms ease",
           overflowX: "hidden",
+          backgroundColor: sideNavType.main,
         },
       }}
     >
