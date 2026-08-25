@@ -38,3 +38,24 @@ export const sidenavColorMap: Record<
     contrast: "#FFFFFF",
   },
 };
+
+export const sidenavTypeMap: Record<
+  string,
+  { main: string; dark: string; contrast: string }
+> = {
+  dark: {
+    main: "#1e1e1e",
+    dark: "#171717",
+    contrast: "#FFFFFF",
+  },
+  transparent: {
+    main: "#00000000",
+    dark: "#171717",
+    contrast: "#FFFFFF",
+  },
+  white: {
+    main: "#FFFFFF",
+    dark: "#E5E5E5",
+    contrast: "#111111",
+  },
+};
