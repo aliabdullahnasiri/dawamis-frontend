@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes , Navigate} from "react-router-dom";
 
 import { Dashboard } from "./layouts/Dashboard";
 
@@ -32,6 +32,8 @@ function App() {
 
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
       <Route path="/*" element={<Dashboard />} />
       <Route path="/auth" element={<h2>Auth</h2>} />
     </Routes>

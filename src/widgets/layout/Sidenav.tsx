@@ -1,7 +1,7 @@
 import { Box, Divider, Drawer, List, Typography } from "@mui/material";
 
 import NavItem from "@/components/NavItem";
-import { navigation } from "@/constants/sidenav";
+import { type RouteItem, routes } from "@/constants/routes";
 
 import { useMaterialController } from "@/context/useMaterialController";
 
@@ -11,18 +11,15 @@ import ProfileNav from "@/widgets/layout/ProfileNav";
 import logoDark from "@/assets/img/logo-ct-dark.png";
 import logoLight from "@/assets/img/logo-ct.png";
 
-import { type NavItemProps } from "@/components/NavItem.tsx";
-
 function findActiveParent(
-  items: NavItemProps[],
+  items: RouteItem[],
   pathname: string,
 ): string | null {
   for (const item of items) {
     if (
       item.children?.some(
         (child) =>
-          child.path === pathname ||
-          pathname.startsWith(`${child.path}/`),
+          child.path === pathname || pathname.startsWith(`${child.path}/`),
       )
     ) {
       return item.label;
@@ -42,6 +39,12 @@ function findActiveParent(
 
 const DRAWER_WIDTH = 250;
 const MINI_DRAWER_WIDTH = 80;
+
+const dashboardRoutes = routes.find(
+  (route) => route.layout === "dashboard",
+);
+
+const navigation = dashboardRoutes?.pages ?? [];
 
 export default function Sidenav() {
   const [controller, dispatch] = useMaterialController();

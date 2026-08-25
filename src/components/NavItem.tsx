@@ -1,24 +1,17 @@
-import {
-  Box,
-  Collapse,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
 import { ExpandLessRounded, ExpandMoreRounded } from "@mui/icons-material";
+import {
+    Box,
+    Collapse,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+} from "@mui/material";
 import { NavLink, useLocation } from "react-router-dom";
 
+import type { RouteItem } from "@/constants/routes";
 import { sidenavColorMap } from "@/constants/sidenav";
 
-export interface NavItemProps {
-  label: string;
-  path?: string;
-  icon: React.ElementType;
-  permission?: string;
-  children?: NavItemProps[];
-}
-
-interface Props extends NavItemProps {
+interface Props extends RouteItem {
   sidenavColor: string;
   isMini: boolean;
   depth?: number;
@@ -26,7 +19,7 @@ interface Props extends NavItemProps {
   onMenuToggle: (label: string) => void;
 }
 
-function containsActivePath(items: NavItemProps[], pathname: string): boolean {
+function containsActivePath(items: RouteItem[], pathname: string): boolean {
   return items.some((item) => {
     if (item.path === pathname) {
       return true;
@@ -58,16 +51,13 @@ export default function NavItem({
   const hasChildren = Boolean(children?.length);
 
   const isActive =
-    path === location.pathname ||
-    (!!path && location.pathname.startsWith(`${path}/`));
-
-  const hasActiveChild = children?.length
+    (path === location.pathname ||
+    (!!path && location.pathname === path)) || (children?.length
     ? containsActivePath(children, location.pathname)
-    : false;
+    : false);
 
-  const active = isActive || hasActiveChild;
 
-  const isOpen = openMenu === label ;
+  const isOpen = openMenu === label;
 
   const handleClick = () => {
     if (hasChildren && !isMini) {
@@ -91,9 +81,9 @@ export default function NavItem({
 
             py: 0.75,
 
-            color: active ? sidenav.main : "text.secondary",
+            color: isActive ? sidenav.main : "text.secondary",
 
-            backgroundColor: active ? `${sidenav.main}12` : "transparent",
+            backgroundColor: isActive ? `${sidenav.main}12` : "transparent",
 
             "&:hover": {
               backgroundColor: `${sidenav.main}10`,
@@ -104,7 +94,7 @@ export default function NavItem({
             sx={{
               minWidth: 30,
 
-              color: active ? sidenav.main : "text.secondary",
+              color: isActive ? sidenav.main : "text.secondary",
             }}
           >
             <Icon fontSize="small" />
@@ -117,7 +107,7 @@ export default function NavItem({
                 sx={{
                   "& .MuiListItemText-primary": {
                     fontSize: "0.8125rem",
-                    fontWeight: active ? 600 : 500,
+                    fontWeight: isActive ? 600 : 500,
                   },
                 }}
               />
@@ -167,9 +157,9 @@ export default function NavItem({
 
           py: 1,
 
-          color: active ? sidenav.contrast : "text.primary",
+          color: isActive ? sidenav.contrast : "text.primary",
 
-          background: active
+          background: isActive
             ? `linear-gradient(
                 135deg,
                 ${sidenav.main} 0%,
@@ -177,7 +167,7 @@ export default function NavItem({
               )`
             : "transparent",
 
-          boxShadow: active ? `0 4px 12px ${sidenav.main}40` : "none",
+          boxShadow: isActive ? `0 4px 12px ${sidenav.main}40` : "none",
 
           justifyContent: isMini ? "center" : "flex-start",
 
@@ -185,7 +175,7 @@ export default function NavItem({
             "background 250ms ease, color 200ms ease, box-shadow 250ms ease",
 
           "&:hover": {
-            background: active
+            background: isActive
               ? `linear-gradient(
                   135deg,
                   ${sidenav.main},
@@ -199,7 +189,7 @@ export default function NavItem({
           sx={{
             minWidth: isMini ? 0 : 34,
 
-            color: active ? sidenav.contrast : "text.secondary",
+            color: isActive ? sidenav.contrast : "text.secondary",
           }}
         >
           <Icon fontSize="small" />
@@ -212,7 +202,7 @@ export default function NavItem({
               sx={{
                 "& .MuiListItemText-primary": {
                   fontSize: "0.875rem",
-                  fontWeight: active ? 600 : 500,
+                  fontWeight: isActive ? 600 : 500,
                 },
               }}
             />

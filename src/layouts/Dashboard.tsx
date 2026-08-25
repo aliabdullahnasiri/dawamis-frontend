@@ -1,4 +1,5 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import { Route, Routes } from "react-router-dom";
 
 import SettingsIcon from "@mui/icons-material/Settings";
 import { IconButton } from "@mui/material";
@@ -7,6 +8,8 @@ import { setOpenConfigurator, setOpenSidenav } from "@/context/materialActions";
 import { useMaterialController } from "@/context/useMaterialController";
 import Configurator from "@/widgets/layout/Configurator.tsx";
 import Sidenav from "@/widgets/layout/Sidenav.tsx";
+
+import { routes } from "@/constants/routes";
 
 import { useMediaQuery, useTheme } from "@mui/material";
 import { useEffect } from "react";
@@ -82,37 +85,15 @@ export function Dashboard() {
           transition: "margin-left 0.3s ease",
         }}
       >
-        <Box
-          sx={{
-            width: "100%",
-            maxWidth: "1600px",
-            overflow: "hidden",
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: {
-                xs: "0.9rem",
-                sm: "1rem",
-              },
-              lineHeight: 1.7,
-              overflowWrap: "break-word",
-            }}
-          >
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id,
-            numquam iste? Placeat culpa quam suscipit, dicta distinctio quas
-            velit, facere in sunt asperiores voluptas impedit atque. Fuga veniam
-            totam ipsa.
-            <Button
-              type="button"
-              onClick={() => {
-                setOpenSidenav(dispatch, !openSidenav);
-              }}
-            >
-              Open Side Nav
-            </Button>
-          </Typography>
-        </Box>
+        <Routes>
+          {routes.map(
+            ({ layout, pages }) =>
+              layout === "dashboard" &&
+              pages.map(({ path, element }) => (
+                <Route path={path} element={element} />
+              ))
+          )}
+        </Routes>
       </Box>
     </Box>
   );
