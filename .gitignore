@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 src-tauri/target/
+src-tauri/gen/
 dist-ssr
 *.local
 
