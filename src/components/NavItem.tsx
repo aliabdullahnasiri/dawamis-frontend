@@ -1,15 +1,16 @@
 import { ExpandLessRounded, ExpandMoreRounded } from "@mui/icons-material";
 import {
-    Box,
-    Collapse,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
+  Box,
+  Collapse,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 import { NavLink, useLocation } from "react-router-dom";
 
 import type { RouteItem } from "@/constants/routes";
 import { sidenavColorMap } from "@/constants/sidenav";
+import { useSidenavTheme } from "@/context/useSidenavTheme";
 
 interface Props extends RouteItem {
   sidenavColor: string;
@@ -47,15 +48,16 @@ export default function NavItem({
   const location = useLocation();
 
   const sidenav = sidenavColorMap[sidenavColor] ?? sidenavColorMap.dark;
+  const { theme: sideNavTheme } = useSidenavTheme();
 
   const hasChildren = Boolean(children?.length);
 
   const isActive =
-    (path === location.pathname ||
-    (!!path && location.pathname === path)) || (children?.length
-    ? containsActivePath(children, location.pathname)
-    : false);
-
+    path === location.pathname ||
+    (!!path && location.pathname === path) ||
+    (children?.length
+      ? containsActivePath(children, location.pathname)
+      : false);
 
   const isOpen = openMenu === label;
 
@@ -71,6 +73,7 @@ export default function NavItem({
         <ListItemButton
           component={path ? NavLink : "div"}
           to={path}
+          color={sideNavTheme.text}
           onClick={handleClick}
           sx={{
             mx: 2,
@@ -157,7 +160,7 @@ export default function NavItem({
 
           py: 1,
 
-          color: isActive ? sidenav.contrast : "text.primary",
+          color: isActive ? sidenav.contrast : sideNavTheme.text + "af",
 
           background: isActive
             ? `linear-gradient(

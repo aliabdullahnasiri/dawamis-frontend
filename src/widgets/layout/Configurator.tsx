@@ -18,7 +18,7 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
   setSidenavColor,
-  setSidenavType,
+  setSidenavTheme,
 } from "@/context/materialActions";
 import { useMaterialController } from "@/context/useMaterialController";
 
@@ -30,7 +30,7 @@ export default function Configurator() {
   const {
     openConfigurator,
     sidenavColor,
-    sidenavType,
+    sidenavTheme,
     fixedNavbar,
     darkMode,
     miniSidenav,
@@ -190,10 +190,10 @@ export default function Configurator() {
 
       <Divider />
 
-      {/* Sidenav Type */}
+      {/* Sidenav Theme */}
       <Box sx={{ py: 4 }}>
         <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-          Sidenav Type
+          Sidenav Theme
         </Typography>
 
         <Typography
@@ -206,22 +206,22 @@ export default function Configurator() {
 
         <Stack direction="row" spacing={1}>
           <Button
-            variant={sidenavType === "dark" ? "contained" : "outlined"}
-            onClick={() => setSidenavType(dispatch, "dark")}
+            variant={sidenavTheme === "dark" ? "contained" : "outlined"}
+            onClick={() => setSidenavTheme(dispatch, "dark")}
           >
             Dark
           </Button>
 
           <Button
-            variant={sidenavType === "transparent" ? "contained" : "outlined"}
-            onClick={() => setSidenavType(dispatch, "transparent")}
+            variant={sidenavTheme === "transparent" ? "contained" : "outlined"}
+            onClick={() => setSidenavTheme(dispatch, "transparent")}
           >
             Transparent
           </Button>
 
           <Button
-            variant={sidenavType === "white" ? "contained" : "outlined"}
-            onClick={() => setSidenavType(dispatch, "white")}
+            variant={sidenavTheme === "white" ? "contained" : "outlined"}
+            onClick={() => setSidenavTheme(dispatch, "white")}
           >
             White
           </Button>

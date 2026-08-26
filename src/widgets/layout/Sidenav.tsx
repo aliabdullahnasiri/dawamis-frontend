@@ -8,10 +8,9 @@ import { useMaterialController } from "@/context/useMaterialController";
 import logoDark from "@/assets/img/logo-ct-dark.png";
 import logoLight from "@/assets/img/logo-ct.png";
 import { setSidenavHovered } from "@/context/materialActions";
+import { useSidenavTheme } from "@/context/useSidenavTheme";
 import ProfileNav from "@/widgets/layout/ProfileNav";
 import { useMemo, useState } from "react";
-
-import { sidenavTypeMap } from "@/constants/sidenav";
 
 function findActiveParent(items: RouteItem[], pathname: string): string | null {
   for (const item of items) {
@@ -46,8 +45,7 @@ const navigation = dashboardRoutes?.pages ?? [];
 export default function Sidenav() {
   const [controller, dispatch] = useMaterialController();
 
-  const { openSidenav, isMini, darkMode, sidenavColor, sidenavType } =
-    controller;
+  const { openSidenav, isMini, darkMode, sidenavColor } = controller;
 
   const activeParent = useMemo(
     () => findActiveParent(navigation, location.pathname),
@@ -60,7 +58,7 @@ export default function Sidenav() {
     setOpenMenu((previous) => (previous === label ? null : label));
   };
 
-  const sideNavType = sidenavTypeMap[sidenavType];
+  const { theme: sideNavTheme, themeName } = useSidenavTheme();
 
   return (
     <Drawer
@@ -79,13 +77,14 @@ export default function Sidenav() {
           height: "calc(100% - 32px)",
           border: "none",
           boxShadow:
-            sidenavType === "transparent"
+            themeName === "transparent"
               ? "none"
               : "0 4px 6px -1px rgba(0,0,0,.06), 0 2px 4px -1px rgba(0,0,0,.04)",
           transform: openSidenav ? "translateX(0)" : "translateX(-120%)",
           transition: "width 300ms ease, transform 300ms ease",
           overflowX: "hidden",
-          backgroundColor: sideNavType.main,
+          backgroundColor: sideNavTheme.background,
+          color: sideNavTheme.text,
         },
       }}
     >
@@ -103,7 +102,11 @@ export default function Sidenav() {
       >
         <Box
           component="img"
-          src={darkMode ? logoLight : logoDark}
+          src={
+            themeName === "white" || (!darkMode && themeName === "transparent")
+              ? logoDark
+              : logoLight
+          }
           alt="DawaKhana"
           sx={{
             width: 32,
@@ -137,14 +140,14 @@ export default function Sidenav() {
         )}
       </Box>
 
-      <Divider sx={{ mx: 2, mb: 1 }} />
+      <Divider sx={{ mx: 2, mb: 1, borderColor: sideNavTheme.divider }} />
 
       <ProfileNav
         full_name="Ali Abdullah Nasiri"
         email="nasiri.aliabdullah@gmail.com"
       />
 
-      <Divider sx={{ mx: 2, mb: 1 }} />
+      <Divider sx={{ mx: 2, mb: 1, borderColor: sideNavTheme.divider }} />
 
       <List sx={{ px: 0 }}>
         {navigation.map((item) => (

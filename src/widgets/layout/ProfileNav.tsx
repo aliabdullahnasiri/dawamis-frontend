@@ -20,6 +20,7 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 
 import { useMaterialController } from "@/context/useMaterialController";
 import { sidenavColorMap } from "@/constants/sidenav";
+import { useSidenavTheme } from "@/context/useSidenavTheme";
 
 interface ProfileNavProps {
   full_name: string;
@@ -35,6 +36,7 @@ export default function ProfileNav({
   const [open, setOpen] = useState(false);
 
   const [controller] = useMaterialController();
+  const { theme: sideNavTheme } = useSidenavTheme();
 
   const { isMini, sidenavColor } = controller;
 
@@ -48,6 +50,7 @@ export default function ProfileNav({
     <Box>
       <ListItemButton
         onClick={() => setOpen((prev) => !prev)}
+        color={sideNavTheme.text}
         sx={{
           mx: 1,
           my: 0.5,
@@ -55,7 +58,6 @@ export default function ProfileNav({
           mb: 1,
           borderRadius: "0.75rem",
           py: 1,
-          color: "text.primary",
         }}
       >
         <Avatar
@@ -65,7 +67,6 @@ export default function ProfileNav({
             width: 28,
             height: 28,
             mr: 0,
-            background: "#3f3f3f",
           }}
         />
 

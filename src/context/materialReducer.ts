@@ -1,3 +1,5 @@
+import type { SidenavThemeName } from "@/constants/sidenav";
+
 export interface MaterialState {
   openSidenav: boolean;
   miniSidenav: boolean;
@@ -5,7 +7,7 @@ export interface MaterialState {
   sidenavHovered: boolean;
   sidenavColor: string;
   darkMode: boolean;
-  sidenavType: string;
+  sidenavTheme: SidenavThemeName;
   transparentNavbar: boolean;
   fixedNavbar: boolean;
   openConfigurator: boolean;
@@ -25,7 +27,7 @@ export type MaterialAction =
       value: boolean;
     }
   | {
-      type: "SIDENAV_TYPE";
+      type: "SIDENAV_THEME";
       value: string;
     }
   | {
@@ -75,12 +77,12 @@ export function reducer(
         sidenavHovered: action.value,
       };
 
-    case "SIDENAV_TYPE":
-      localStorage.setItem("sidenavType", action.value);
+    case "SIDENAV_THEME":
+      localStorage.setItem("sidenavTheme", action.value);
 
       return {
         ...state,
-        sidenavType: action.value,
+        sidenavTheme: action.value,
       };
 
     case "SIDENAV_COLOR":

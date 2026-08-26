@@ -28,10 +28,10 @@ const initialState: MaterialState = {
 
   darkMode: getStoredBoolean("darkMode", false),
 
-  sidenavType: getStoredString(
-    "sidenavType",
+  sidenavTheme: getStoredString(
+    "sidenavTheme",
     "white",
-  ) as MaterialState["sidenavType"],
+  ) as MaterialState["sidenavTheme"],
 
   transparentNavbar: getStoredBoolean("transparentNavbar", true),
 

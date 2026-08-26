@@ -1,6 +1,8 @@
 import type {
+
   MaterialAction,
 } from "./materialReducer";
+import {} from "@/context/useSidenavTheme"
 
 type Dispatch = React.Dispatch<MaterialAction>;
 
@@ -34,12 +36,12 @@ export const setSidenavHovered = (
   });
 };
 
-export const setSidenavType = (
+export const setSidenavTheme= (
   dispatch: Dispatch,
   value: string,
 ) => {
   dispatch({
-    type: "SIDENAV_TYPE",
+    type: "SIDENAV_THEME",
     value,
   });
 };

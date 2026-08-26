@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
+import { SidenavThemeProvider } from "@/context/SidenavThemeProvider";
 import App from "./App.tsx";
 import { MaterialControllerProvider } from "./context/MaterialProvider";
 import "./index.css";
@@ -12,7 +13,9 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <MaterialControllerProvider>
         <AppTheme>
-          <App />
+          <SidenavThemeProvider>
+            <App />
+          </SidenavThemeProvider>
         </AppTheme>
       </MaterialControllerProvider>
     </BrowserRouter>
