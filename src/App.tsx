@@ -11,6 +11,12 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const preventContextMenu = (event: MouseEvent) => {
+      event.preventDefault();
+    };
+
+    document.addEventListener("contextmenu", preventContextMenu);
+
     const initializeApp = async () => {
       try {
         // Load current user
