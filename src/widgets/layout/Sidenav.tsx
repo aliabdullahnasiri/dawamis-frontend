@@ -19,28 +19,17 @@ import {
   PersonRounded,
 } from "@mui/icons-material";
 
-import {
-  NavLink,
-  useLocation,
-} from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { routes, type RouteItem } from "@/constants/routes";
 
-import {
-  setSidenavHovered,
-} from "@/context/materialActions";
+import { setSidenavHovered } from "@/context/materialActions";
 
-import {
-  useMaterialController,
-} from "@/context/useMaterialController";
+import { useMaterialController } from "@/context/useMaterialController";
 
-import {
-  useSidenavTheme,
-} from "@/context/useSidenavTheme";
+import { useSidenavTheme } from "@/context/useSidenavTheme";
 
-import {
-  sidenavColorMap,
-} from "@/constants/sidenav";
+import { sidenavColorMap } from "@/constants/sidenav";
 
 import logoDark from "@/assets/img/logo-ct-dark.png";
 import logoLight from "@/assets/img/logo-ct.png";
@@ -70,9 +59,7 @@ interface ProfileNavProps {
 const DRAWER_WIDTH = 250;
 const MINI_DRAWER_WIDTH = 80;
 
-const dashboardRoutes = routes.find(
-  (route) => route.layout === "dashboard",
-);
+const dashboardRoutes = routes.find((route) => route.layout === "dashboard");
 
 const navigation = dashboardRoutes?.pages ?? [];
 
@@ -80,47 +67,34 @@ const navigation = dashboardRoutes?.pages ?? [];
    HELPERS
    ========================================================= */
 
-function containsActivePath(
-  items: RouteItem[],
-  pathname: string,
-): boolean {
+function containsActivePath(items: RouteItem[], pathname: string): boolean {
   return items.some((item) => {
     if (item.path === pathname) {
       return true;
     }
 
     if (item.children) {
-      return containsActivePath(
-        item.children,
-        pathname,
-      );
+      return containsActivePath(item.children, pathname);
     }
 
     return false;
   });
 }
 
-function findActiveParent(
-  items: RouteItem[],
-  pathname: string,
-): string | null {
+function findActiveParent(items: RouteItem[], pathname: string): string | null {
   for (const item of items) {
     if (
       item.children?.some(
         (child) =>
           child.path === pathname ||
-          (!!child.path &&
-            pathname.startsWith(`${child.path}/`)),
+          (!!child.path && pathname.startsWith(`${child.path}/`)),
       )
     ) {
       return item.label;
     }
 
     if (item.children) {
-      const nested = findActiveParent(
-        item.children,
-        pathname,
-      );
+      const nested = findActiveParent(item.children, pathname);
 
       if (nested) {
         return item.label;
@@ -135,32 +109,20 @@ function findActiveParent(
    PROFILE NAV
    ========================================================= */
 
-function ProfileNav({
-  full_name,
-  email,
-  avatar,
-}: ProfileNavProps) {
+function ProfileNav({ full_name, email, avatar }: ProfileNavProps) {
   const [open, setOpen] = useState(false);
 
   const [controller] = useMaterialController();
 
-  const {
-    isMini,
-    sidenavColor,
-  } = controller;
+  const { isMini, sidenavColor } = controller;
 
-  const {
-    theme: sideNavTheme,
-  } = useSidenavTheme();
+  const { theme: sideNavTheme } = useSidenavTheme();
 
-  const sidenav =
-    sidenavColorMap[sidenavColor] ??
-    sidenavColorMap.dark;
+  const sidenav = sidenavColorMap[sidenavColor] ?? sidenavColorMap.dark;
 
   const location = useLocation();
 
-  const isProfileActive =
-    location.pathname === "/profile";
+  const isProfileActive = location.pathname === "/profile";
 
   return (
     <Box>
@@ -221,8 +183,7 @@ function ProfileNav({
 
                 width: "100%",
 
-                transition:
-                  "width 0.3s ease",
+                transition: "width 0.3s ease",
               }}
             />
 
@@ -249,15 +210,8 @@ function ProfileNav({
           PROFILE MENU
           ========================= */}
 
-      <Collapse
-        in={!isMini && open}
-        timeout="auto"
-        unmountOnExit
-      >
-        <List
-          component="div"
-          disablePadding
-        >
+      <Collapse in={!isMini && open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
           {/* PROFILE */}
 
           <ListItemButton
@@ -276,14 +230,12 @@ function ProfileNav({
                 ? sidenav.main
                 : sideNavTheme.textSecondary,
 
-              backgroundColor:
-                isProfileActive
-                  ? `${sidenav.main}12`
-                  : "transparent",
+              backgroundColor: isProfileActive
+                ? `${sidenav.main}12`
+                : "transparent",
 
               "&:hover": {
-                backgroundColor:
-                  `${sidenav.main}10`,
+                backgroundColor: `${sidenav.main}10`,
               },
             }}
           >
@@ -303,10 +255,7 @@ function ProfileNav({
                 "& .MuiListItemText-primary": {
                   fontSize: "0.8125rem",
 
-                  fontWeight:
-                    isProfileActive
-                      ? 600
-                      : 500,
+                  fontWeight: isProfileActive ? 600 : 500,
                 },
               }}
             />
@@ -326,15 +275,12 @@ function ProfileNav({
 
               py: 0.75,
 
-              color:
-                sideNavTheme.textSecondary,
+              color: sideNavTheme.textSecondary,
 
-              backgroundColor:
-                "transparent",
+              backgroundColor: "transparent",
 
               "&:hover": {
-                backgroundColor:
-                  `${sidenav.main}10`,
+                backgroundColor: `${sidenav.main}10`,
               },
             }}
           >
@@ -345,9 +291,7 @@ function ProfileNav({
                 color: "inherit",
               }}
             >
-              <LogoutRounded
-                fontSize="small"
-              />
+              <LogoutRounded fontSize="small" />
             </ListItemIcon>
 
             <ListItemText
@@ -384,32 +328,20 @@ function NavItem({
 }: NavItemProps) {
   const location = useLocation();
 
-  const {
-    theme: sideNavTheme,
-  } = useSidenavTheme();
+  const { theme: sideNavTheme } = useSidenavTheme();
 
-  const sidenav =
-    sidenavColorMap[sidenavColor] ??
-    sidenavColorMap.dark;
+  const sidenav = sidenavColorMap[sidenavColor] ?? sidenavColorMap.dark;
 
-  const hasChildren =
-    Boolean(children?.length);
+  const hasChildren = Boolean(children?.length);
 
   const isActive =
-    path === location.pathname ||
-    (!!path &&
-      location.pathname.startsWith(`${path}/`));
+    path === location.pathname || (!!path && location.pathname === path);
 
-  const hasActiveChild =
-    children?.length
-      ? containsActivePath(
-          children,
-          location.pathname,
-        )
-      : false;
+  const hasActiveChild = children?.length
+    ? containsActivePath(children, location.pathname)
+    : false;
 
-  const active =
-    isActive || hasActiveChild;
+  const active = isActive || hasActiveChild;
 
   /*
    * Only one menu can be open.
@@ -417,14 +349,10 @@ function NavItem({
    * If this item's label equals openMenu,
    * this menu is open.
    */
-  const isOpen =
-    openMenu === label;
+  const isOpen = openMenu === label;
 
   const handleClick = () => {
-    if (
-      hasChildren &&
-      !isMini
-    ) {
+    if (hasChildren && !isMini) {
       onMenuToggle(label);
     }
   };
@@ -437,39 +365,26 @@ function NavItem({
     return (
       <Box>
         <ListItemButton
-          component={
-            path
-              ? NavLink
-              : "div"
-          }
+          component={path ? NavLink : "div"}
           to={path}
           onClick={handleClick}
           sx={{
             mx: 2,
 
-            ml:
-              4 +
-              (depth - 1) * 2,
+            ml: 4 + (depth - 1) * 2,
 
             my: 0.25,
 
-            borderRadius:
-              "0.65rem",
+            borderRadius: "0.65rem",
 
             py: 0.75,
 
-            color: active
-              ? sidenav.main
-              : sideNavTheme.textSecondary,
+            color: active ? sidenav.main : sideNavTheme.textSecondary,
 
-            backgroundColor:
-              active
-                ? `${sidenav.main}12`
-                : "transparent",
+            backgroundColor: active ? `${sidenav.main}12` : "transparent",
 
             "&:hover": {
-              backgroundColor:
-                `${sidenav.main}10`,
+              backgroundColor: `${sidenav.main}10`,
             },
           }}
         >
@@ -489,26 +404,18 @@ function NavItem({
                 primary={label}
                 sx={{
                   "& .MuiListItemText-primary": {
-                    fontSize:
-                      "0.8125rem",
+                    fontSize: "0.8125rem",
 
-                    fontWeight:
-                      active
-                        ? 600
-                        : 500,
+                    fontWeight: active ? 600 : 500,
                   },
                 }}
               />
 
               {hasChildren &&
                 (isOpen ? (
-                  <ExpandLessRounded
-                    fontSize="small"
-                  />
+                  <ExpandLessRounded fontSize="small" />
                 ) : (
-                  <ExpandMoreRounded
-                    fontSize="small"
-                  />
+                  <ExpandMoreRounded fontSize="small" />
                 ))}
             </>
           )}
@@ -517,36 +424,19 @@ function NavItem({
         {/* CHILDREN OF CHILD */}
 
         {hasChildren && (
-          <Collapse
-            in={
-              !isMini &&
-              isOpen
-            }
-            timeout={200}
-            unmountOnExit
-          >
+          <Collapse in={!isMini && isOpen} timeout={200} unmountOnExit>
             <Box>
-              {children?.map(
-                (child) => (
-                  <NavItem
-                    key={`${label}-${child.label}`}
-                    {...child}
-                    sidenavColor={
-                      sidenavColor
-                    }
-                    isMini={isMini}
-                    openMenu={
-                      openMenu
-                    }
-                    onMenuToggle={
-                      onMenuToggle
-                    }
-                    depth={
-                      depth + 1
-                    }
-                  />
-                ),
-              )}
+              {children?.map((child) => (
+                <NavItem
+                  key={`${label}-${child.label}`}
+                  {...child}
+                  sidenavColor={sidenavColor}
+                  isMini={isMini}
+                  openMenu={openMenu}
+                  onMenuToggle={onMenuToggle}
+                  depth={depth + 1}
+                />
+              ))}
             </Box>
           </Collapse>
         )}
@@ -561,25 +451,18 @@ function NavItem({
   return (
     <Box>
       <ListItemButton
-        component={
-          path
-            ? NavLink
-            : "div"
-        }
+        component={path ? NavLink : "div"}
         to={path}
         onClick={handleClick}
         sx={{
           mx: 1.6,
           my: 0.5,
 
-          borderRadius:
-            "0.75rem",
+          borderRadius: "0.75rem",
 
           py: 1,
 
-          color: active
-            ? sidenav.contrast
-            : sideNavTheme.text,
+          color: active ? sidenav.contrast : sideNavTheme.text,
 
           background: active
             ? `linear-gradient(
@@ -589,14 +472,9 @@ function NavItem({
               )`
             : "transparent",
 
-          boxShadow: active
-            ? `0 4px 12px ${sidenav.main}40`
-            : "none",
+          boxShadow: active ? `0 4px 12px ${sidenav.main}40` : "none",
 
-          justifyContent:
-            isMini
-              ? "center"
-              : "flex-start",
+          justifyContent: isMini ? "center" : "flex-start",
 
           transition:
             "background 250ms ease, color 200ms ease, box-shadow 250ms ease",
@@ -614,14 +492,9 @@ function NavItem({
       >
         <ListItemIcon
           sx={{
-            minWidth:
-              isMini
-                ? 0
-                : 34,
+            minWidth: isMini ? 0 : 34,
 
-            color: active
-              ? sidenav.contrast
-              : sideNavTheme.textSecondary,
+            color: active ? sidenav.contrast : sideNavTheme.textSecondary,
           }}
         >
           <Icon fontSize="small" />
@@ -633,13 +506,9 @@ function NavItem({
               primary={label}
               sx={{
                 "& .MuiListItemText-primary": {
-                  fontSize:
-                    "0.875rem",
+                  fontSize: "0.875rem",
 
-                  fontWeight:
-                    active
-                      ? 600
-                      : 500,
+                  fontWeight: active ? 600 : 500,
 
                   color: "inherit",
                 },
@@ -648,13 +517,9 @@ function NavItem({
 
             {hasChildren &&
               (isOpen ? (
-                <ExpandLessRounded
-                  fontSize="small"
-                />
+                <ExpandLessRounded fontSize="small" />
               ) : (
-                <ExpandMoreRounded
-                  fontSize="small"
-                />
+                <ExpandMoreRounded fontSize="small" />
               ))}
           </>
         )}
@@ -663,34 +528,19 @@ function NavItem({
       {/* CHILDREN */}
 
       {hasChildren && (
-        <Collapse
-          in={
-            !isMini &&
-            isOpen
-          }
-          timeout={200}
-          unmountOnExit
-        >
+        <Collapse in={!isMini && isOpen} timeout={200} unmountOnExit>
           <Box>
-            {children?.map(
-              (child) => (
-                <NavItem
-                  key={`${label}-${child.label}`}
-                  {...child}
-                  sidenavColor={
-                    sidenavColor
-                  }
-                  isMini={isMini}
-                  openMenu={
-                    openMenu
-                  }
-                  onMenuToggle={
-                    onMenuToggle
-                  }
-                  depth={1}
-                />
-              ),
-            )}
+            {children?.map((child) => (
+              <NavItem
+                key={`${label}-${child.label}`}
+                {...child}
+                sidenavColor={sidenavColor}
+                isMini={isMini}
+                openMenu={openMenu}
+                onMenuToggle={onMenuToggle}
+                depth={1}
+              />
+            ))}
           </Box>
         </Collapse>
       )}
@@ -703,48 +553,28 @@ function NavItem({
    ========================================================= */
 
 export default function Sidenav() {
-  const [controller, dispatch] =
-    useMaterialController();
+  const [controller, dispatch] = useMaterialController();
 
-  const {
-    openSidenav,
-    isMini,
-    darkMode,
-    sidenavColor,
-  } = controller;
+  const { openSidenav, isMini, darkMode, sidenavColor } = controller;
 
-  const location =
-    useLocation();
+  const location = useLocation();
 
-  const {
-    theme: sideNavTheme,
-    themeName,
-  } = useSidenavTheme();
+  const { theme: sideNavTheme, themeName } = useSidenavTheme();
 
   /*
    * Find the parent of the
    * currently active route.
    */
-  const activeParent =
-    useMemo(
-      () =>
-        findActiveParent(
-          navigation,
-          location.pathname,
-        ),
-      [location.pathname],
-    );
+  const activeParent = useMemo(
+    () => findActiveParent(navigation, location.pathname),
+    [location.pathname],
+  );
 
   /*
    * Only one menu can be
    * opened at a time.
    */
-  const [
-    openMenu,
-    setOpenMenu,
-  ] = useState<string | null>(
-    activeParent,
-  );
+  const [openMenu, setOpenMenu] = useState<string | null>(activeParent);
 
   /*
    * Open the active parent
@@ -759,80 +589,48 @@ export default function Sidenav() {
   /*
    * Toggle parent menu.
    */
-  const handleMenuToggle = (
-    label: string,
-  ) => {
-    setOpenMenu(
-      (previous) =>
-        previous === label
-          ? null
-          : label,
-    );
+  const handleMenuToggle = (label: string) => {
+    setOpenMenu((previous) => (previous === label ? null : label));
   };
 
   return (
     <Drawer
       variant="permanent"
       open
-      onMouseEnter={() =>
-        setSidenavHovered(
-          dispatch,
-          true,
-        )
-      }
-      onMouseLeave={() =>
-        setSidenavHovered(
-          dispatch,
-          false,
-        )
-      }
+      onMouseEnter={() => setSidenavHovered(dispatch, true)}
+      onMouseLeave={() => setSidenavHovered(dispatch, false)}
       sx={{
-        width: isMini
-          ? MINI_DRAWER_WIDTH
-          : DRAWER_WIDTH,
+        width: isMini ? MINI_DRAWER_WIDTH : DRAWER_WIDTH,
 
         flexShrink: 0,
 
         "& .MuiDrawer-paper": {
-          width: isMini
-            ? MINI_DRAWER_WIDTH
-            : DRAWER_WIDTH,
+          width: isMini ? MINI_DRAWER_WIDTH : DRAWER_WIDTH,
 
-          boxSizing:
-            "border-box",
+          boxSizing: "border-box",
 
           m: 2,
 
-          borderRadius:
-            "1rem",
+          borderRadius: "1rem",
 
-          height:
-            "calc(100% - 32px)",
+          height: "calc(100% - 32px)",
 
           border: "none",
 
           boxShadow:
-            themeName ===
-            "transparent"
+            themeName === "transparent"
               ? "none"
               : "0 4px 6px -1px rgba(0,0,0,.06), 0 2px 4px -1px rgba(0,0,0,.04)",
 
-          transform:
-            openSidenav
-              ? "translateX(0)"
-              : "translateX(-120%)",
+          transform: openSidenav ? "translateX(0)" : "translateX(-120%)",
 
-          transition:
-            "width 300ms ease, transform 300ms ease",
+          transition: "width 300ms ease, transform 300ms ease",
 
-          overflowX:
-            "hidden",
+          overflowX: "hidden",
 
-          backgroundColor:
-            sideNavTheme.background,
+          backgroundColor: sideNavTheme.background,
 
-          color:
-            sideNavTheme.text,
+          color: sideNavTheme.text,
         },
       }}
     >
@@ -842,38 +640,27 @@ export default function Sidenav() {
 
       <Box
         sx={{
-          px: isMini
-            ? 2
-            : 3,
+          px: isMini ? 2 : 3,
 
           py: 3,
 
           display: "flex",
 
-          alignItems:
-            "center",
+          alignItems: "center",
 
-          justifyContent:
-            isMini
-              ? "center"
-              : "flex-start",
+          justifyContent: isMini ? "center" : "flex-start",
 
           gap: 1.5,
 
           minHeight: 64,
 
-          transition:
-            "all 300ms ease",
+          transition: "all 300ms ease",
         }}
       >
         <Box
           component="img"
           src={
-            themeName ===
-              "white" ||
-            (!darkMode &&
-              themeName ===
-                "transparent")
+            themeName === "white" || (!darkMode && themeName === "transparent")
               ? logoDark
               : logoLight
           }
@@ -882,8 +669,7 @@ export default function Sidenav() {
             width: 32,
             height: 32,
 
-            objectFit:
-              "contain",
+            objectFit: "contain",
 
             flexShrink: 0,
           }}
@@ -892,11 +678,9 @@ export default function Sidenav() {
         {!isMini && (
           <Box
             sx={{
-              overflow:
-                "hidden",
+              overflow: "hidden",
 
-              whiteSpace:
-                "nowrap",
+              whiteSpace: "nowrap",
             }}
           >
             <Typography
@@ -906,8 +690,7 @@ export default function Sidenav() {
 
                 lineHeight: 1.2,
 
-                color:
-                  sideNavTheme.text,
+                color: sideNavTheme.text,
               }}
             >
               DawaKhana
@@ -916,8 +699,7 @@ export default function Sidenav() {
             <Typography
               variant="caption"
               sx={{
-                color:
-                  sideNavTheme.textSecondary,
+                color: sideNavTheme.textSecondary,
               }}
             >
               Pharmacy Management
@@ -935,8 +717,7 @@ export default function Sidenav() {
           mx: 2,
           mb: 1,
 
-          borderColor:
-            sideNavTheme.divider,
+          borderColor: sideNavTheme.divider,
         }}
       />
 
@@ -958,8 +739,7 @@ export default function Sidenav() {
           mx: 2,
           mb: 1,
 
-          borderColor:
-            sideNavTheme.divider,
+          borderColor: sideNavTheme.divider,
         }}
       />
 
@@ -972,24 +752,16 @@ export default function Sidenav() {
           px: 0,
         }}
       >
-        {navigation.map(
-          (item) => (
-            <NavItem
-              key={item.label}
-              {...item}
-              sidenavColor={
-                sidenavColor
-              }
-              isMini={isMini}
-              openMenu={
-                openMenu
-              }
-              onMenuToggle={
-                handleMenuToggle
-              }
-            />
-          ),
-        )}
+        {navigation.map((item) => (
+          <NavItem
+            key={item.label}
+            {...item}
+            sidenavColor={sidenavColor}
+            isMini={isMini}
+            openMenu={openMenu}
+            onMenuToggle={handleMenuToggle}
+          />
+        ))}
       </List>
     </Drawer>
   );
