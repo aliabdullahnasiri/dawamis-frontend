@@ -28,7 +28,7 @@ export type MaterialAction =
     }
   | {
       type: "SIDENAV_THEME";
-      value: string;
+      value: SidenavThemeName;
     }
   | {
       type: "SIDENAV_COLOR";
