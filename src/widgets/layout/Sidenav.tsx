@@ -1,4 +1,3 @@
-import { useMemo, useState } from "react";
 import {
   Avatar,
   Box,
@@ -11,6 +10,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { useMemo, useState } from "react";
 
 import {
   ExpandLessRounded,
@@ -56,8 +56,8 @@ interface ProfileNavProps {
    CONSTANTS
    ========================================================= */
 
-const DRAWER_WIDTH = 250;
-const MINI_DRAWER_WIDTH = 80;
+export const DRAWER_WIDTH = 250;
+export const MINI_DRAWER_WIDTH = 80;
 
 const dashboardRoutes = routes.find((route) => route.layout === "dashboard");
 
@@ -227,7 +227,7 @@ function ProfileNav({ full_name, email, avatar }: ProfileNavProps) {
               py: 0.75,
 
               color: isProfileActive
-                ? sidenav.main
+                ? sideNavTheme.text
                 : sideNavTheme.textSecondary,
 
               backgroundColor: isProfileActive
@@ -379,9 +379,9 @@ function NavItem({
 
             py: 0.75,
 
-            color: active ? sidenav.main : sideNavTheme.textSecondary,
+            color: active ? sideNavTheme.text : sideNavTheme.textSecondary,
 
-            backgroundColor: active ? `${sidenav.main}12` : "transparent",
+            backgroundColor: active ? `${sidenav.main}25` : "transparent",
 
             "&:hover": {
               backgroundColor: `${sidenav.main}10`,
@@ -575,16 +575,6 @@ export default function Sidenav() {
    * opened at a time.
    */
   const [openMenu, setOpenMenu] = useState<string | null>(activeParent);
-
-  /*
-   * Open the active parent
-   * when the URL changes.
-   */
-  useMemo(() => {
-    if (activeParent) {
-      setOpenMenu(activeParent);
-    }
-  }, [activeParent]);
 
   /*
    * Toggle parent menu.
