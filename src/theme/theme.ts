@@ -5,34 +5,52 @@ import {
 } from "@mui/material/styles";
 
 const common: ThemeOptions = {
+  transitions: {
+    duration: { shortest: 120, shorter: 160, short: 180, standard: 220, complex: 260, enteringScreen: 240, leavingScreen: 160 },
+    easing: { easeInOut: 'cubic-bezier(.2, 0, 0, 1)', easeOut: 'cubic-bezier(.16, 1, .3, 1)', easeIn: 'cubic-bezier(.4, 0, 1, 1)', sharp: 'cubic-bezier(.4, 0, .6, 1)' },
+  },
   typography: {
     fontFamily:
-      '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+      '"Public Sans", "Vazirmatn", sans-serif',
 
     h1: {
+      fontSize: "2.25rem",
+      lineHeight: 1.35,
       fontWeight: 700,
     },
 
     h2: {
+      fontSize: "1.875rem",
+      lineHeight: 1.35,
       fontWeight: 700,
     },
 
     h3: {
+      fontSize: "1.625rem",
+      lineHeight: 1.35,
       fontWeight: 700,
     },
 
     h4: {
+      fontSize: "1.5rem",
+      lineHeight: 1.35,
       fontWeight: 700,
     },
 
     h5: {
+      fontSize: "1.25rem",
+      lineHeight: 1.35,
       fontWeight: 600,
     },
 
     h6: {
+      fontSize: "1.125rem",
+      lineHeight: 1.35,
       fontWeight: 600,
     },
 
+    body1: { fontSize: "0.9375rem", lineHeight: 1.6 },
+    body2: { fontSize: "0.8125rem", lineHeight: 1.6 },
     button: {
       textTransform: "none",
       fontWeight: 600,
@@ -44,6 +62,22 @@ const common: ThemeOptions = {
   },
 
   components: {
+    MuiDialog: {
+      defaultProps: { transitionDuration: { enter: 220, exit: 160 } },
+      styleOverrides: { paper: { overflow: "hidden", animation: "dialog-reveal 220ms cubic-bezier(.2, 0, 0, 1)" } },
+    },
+    MuiMenu: { defaultProps: { transitionDuration: { enter: 180, exit: 140 } } },
+    MuiPopover: { defaultProps: { transitionDuration: { enter: 180, exit: 140 } } },
+    MuiSkeleton: { defaultProps: { animation: 'wave' } },
+    MuiAlert: { styleOverrides: { root: { animation: 'feedback-reveal 180ms cubic-bezier(.2, 0, 0, 1)' } } },
+    MuiListItemButton: { styleOverrides: { root: { transition: 'background-color 160ms ease, color 120ms ease' } } },
+    MuiAccordionSummary: { styleOverrides: { expandIconWrapper: { transition: 'transform 180ms cubic-bezier(.2, 0, 0, 1)' } } },
+    MuiFormLabel: {
+      styleOverrides: { asterisk: { display: "none" } },
+    },
+    MuiFormControlLabel: {
+      styleOverrides: { asterisk: { display: "none" } },
+    },
     MuiTextField: {
       defaultProps: {
         variant: "outlined",
@@ -132,6 +166,7 @@ const common: ThemeOptions = {
       styleOverrides: {
         root: {
           borderRadius: 6,
+          "&.Mui-checked .MuiSvgIcon-root": { animation: "check-confirm 160ms cubic-bezier(.2, 0, 0, 1)" },
 
           "&:hover": {
             backgroundColor: "action.hover",
@@ -183,6 +218,7 @@ const common: ThemeOptions = {
         root: {
           marginLeft: 2,
           marginTop: 6,
+          animation: "feedback-reveal 160ms ease",
           fontSize: "0.75rem",
         },
       },
@@ -194,6 +230,8 @@ const common: ThemeOptions = {
         root: {
           borderRadius: 10,
           padding: "9px 16px",
+          transition: "transform 120ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease",
+          "&:active:not(.Mui-disabled)": { transform: "scale(.96)" },
           boxShadow: "none",
 
           "&:hover": {
@@ -208,16 +246,22 @@ const common: ThemeOptions = {
       styleOverrides: {
         root: {
           borderRadius: 10,
+          transition: "transform 120ms ease, background-color 160ms ease, color 160ms ease",
+          "&:active:not(.Mui-disabled)": { transform: "scale(.96)" },
         },
       },
     },
 
     MuiPaper: {
+      defaultProps: { elevation: 0 },
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           borderRadius: 16,
           backgroundImage: "none",
-        },
+          border: "1px solid",
+          borderColor: theme.palette.divider,
+          boxShadow: "none",
+        }),
       },
     },
 
