@@ -1,0 +1,29 @@
+:root {
+  --motion-fast: 120ms;
+  --motion-standard: 180ms;
+  --motion-enter: 240ms;
+  --motion-ease: cubic-bezier(.2, 0, 0, 1);
+}
+
+/* One coordinated reveal after the page skeleton finishes. */
+[data-motion-page="ready"] { animation: page-reveal var(--motion-standard) var(--motion-ease); }
+[data-motion-page="ready"] [data-motion-panel] { animation: panel-reveal var(--motion-enter) var(--motion-ease) backwards; }
+@keyframes page-reveal { from { opacity: .6; } to { opacity: 1; } }
+@keyframes panel-reveal { from { transform: translateY(5px); } to { transform: translateY(0); } }
+@keyframes dialog-reveal { from { transform: translateY(6px) scale(.985); } to { transform: translateY(0) scale(1); } }
+@keyframes feedback-reveal { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes check-confirm { from { transform: scale(.8); } to { transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-motion-page="ready"], [data-motion-panel] { animation: none !important; }
+  .MuiButton-root:active, .MuiIconButton-root:active { transform: none !important; }
+}
+@media print {
+  [data-motion-page], [data-motion-panel] { animation: none !important; }
+}
