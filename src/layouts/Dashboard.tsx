@@ -1,11 +1,9 @@
 import { Box } from "@mui/material";
 import { Routes } from "react-router-dom";
 
-import SettingsIcon from "@mui/icons-material/Settings";
-import { IconButton } from "@mui/material";
 
 import { routes } from "@/constants/routes";
-import { setOpenConfigurator, setOpenSidenav } from "@/context/materialActions";
+import { setOpenSidenav } from "@/context/materialActions";
 import { useMaterialController } from "@/context/useMaterialController";
 import { renderRoutes } from "@/utils/renderRoutes";
 import Configurator from "@/widgets/layout/Configurator.tsx";
@@ -18,7 +16,7 @@ import { useEffect } from "react";
 export function Dashboard() {
   const [controller, dispatch] = useMaterialController();
 
-  const { openSidenav, isMini, fixedNavbar } = controller;
+  const { openSidenav, isMini } = controller;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
@@ -32,39 +30,13 @@ export function Dashboard() {
       sx={{
         minHeight: "100vh",
         bgcolor: "background.default",
-        transition: "background 500ms ease",
       }}
     >
       <Sidenav />
 
       <Configurator />
 
-      <IconButton
-        onClick={() => setOpenConfigurator(dispatch, true)}
 
-        sx={{
-          position: "fixed",
-          bottom: 32,
-          right: 32,
-          zIndex: 40,
-
-          width: 48,
-          height: 48,
-
-          borderRadius: "50%",
-
-          color: "white",
-          bgcolor: "primary.main",
-
-          boxShadow: 3,
-
-          "&:hover": {
-            bgcolor: "primary.dark",
-          },
-        }}
-      >
-        <SettingsIcon sx={{ fontSize: 20 }} />
-      </IconButton>
 
       <Box
         sx={{
@@ -76,16 +48,16 @@ export function Dashboard() {
             xs: 0,
             lg: openSidenav ? (isMini ? "84px" : "260px") : 0,
           },
-          transition: "all 0.3s ease",
+          transition: "margin 200ms ease, padding 200ms ease",
         }}
       >
         <Navbar />
 
         <Box
           sx={{
-            mt: fixedNavbar ? 5 : 2.5,
-            height: 1000,
-            transition: "300ms ease",
+            mt: 3,
+            minHeight: "70vh",
+            transition: "margin 200ms ease",
           }}
         >
           <Routes>

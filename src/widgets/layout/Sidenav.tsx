@@ -15,10 +15,15 @@ import { useMemo, useState } from "react";
 import {
   ExpandLessRounded,
   ExpandMoreRounded,
-  LogoutRounded,
   PersonRounded,
+  ShieldOutlined,
 } from "@mui/icons-material";
 
+import { useSession } from "@/context/Session";
+import { fullName, initials } from "@/components/auth/identity";
+import { alpha } from "@mui/material/styles";
+import { useLocale } from "@/i18n/locale";
+import { useAuthText } from "@/components/auth/text";
 import { NavLink, useLocation } from "react-router-dom";
 
 import { routes, type RouteItem } from "@/constants/routes";
@@ -110,7 +115,9 @@ function findActiveParent(items: RouteItem[], pathname: string): string | null {
    ========================================================= */
 
 function ProfileNav({ full_name, email, avatar }: ProfileNavProps) {
-  const [open, setOpen] = useState(false);
+  const t = useAuthText();
+  const location = useLocation();
+  const [open, setOpen] = useState(location.pathname === "/account/security" || location.pathname === "/profile");
 
   const [controller] = useMaterialController();
 
@@ -120,7 +127,7 @@ function ProfileNav({ full_name, email, avatar }: ProfileNavProps) {
 
   const sidenav = sidenavColorMap[sidenavColor] ?? sidenavColorMap.dark;
 
-  const location = useLocation();
+  const isSecurityActive = location.pathname === "/account/security";
 
   const isProfileActive = location.pathname === "/profile";
 
@@ -131,6 +138,8 @@ function ProfileNav({ full_name, email, avatar }: ProfileNavProps) {
           ========================= */}
 
       <ListItemButton
+        aria-expanded={open}
+        aria-label={full_name}
         onClick={() => setOpen((previous) => !previous)}
         sx={{
           mx: 1,
@@ -153,11 +162,17 @@ function ProfileNav({ full_name, email, avatar }: ProfileNavProps) {
           src={avatar}
           alt={full_name}
           sx={{
-            width: 28,
-            height: 28,
-            mr: isMini ? 0 : 0,
+            width: 36,
+            height: 36,
+            flexShrink: 0,
+            fontSize: 13,
+            fontWeight: 600,
+            bgcolor: theme => alpha(theme.palette.primary.main, .12),
+            color: 'primary.main',
+            border: '1px solid',
+            borderColor: theme => alpha(theme.palette.primary.main, .18),
           }}
-        />
+        >{initials(full_name)}</Avatar>
 
         {!isMini && (
           <>
@@ -250,7 +265,7 @@ function ProfileNav({ full_name, email, avatar }: ProfileNavProps) {
             </ListItemIcon>
 
             <ListItemText
-              primary="My Profile"
+              primary={t("profile")}
               sx={{
                 "& .MuiListItemText-primary": {
                   fontSize: "0.8125rem",
@@ -261,50 +276,25 @@ function ProfileNav({ full_name, email, avatar }: ProfileNavProps) {
             />
           </ListItemButton>
 
-          {/* LOGOUT */}
-
           <ListItemButton
             component={NavLink}
-            to="/logout"
+            to="/account/security"
             sx={{
-              mx: 2,
-              ml: 4,
-              my: 0.25,
-
-              borderRadius: "0.75rem",
-
-              py: 0.75,
-
-              color: sideNavTheme.textSecondary,
-
-              backgroundColor: "transparent",
-
-              "&:hover": {
-                backgroundColor: `${sidenav.main}10`,
-              },
+              mx: 2, ml: 4, my: 0.25, py: 0.75, minHeight: 44,
+              borderRadius: '0.75rem',
+              color: isSecurityActive ? sideNavTheme.text : sideNavTheme.textSecondary,
+              backgroundColor: isSecurityActive ? `${sidenav.main}12` : 'transparent',
+              '&:hover': { backgroundColor: `${sidenav.main}10` },
             }}
           >
-            <ListItemIcon
-              sx={{
-                minWidth: 30,
-
-                color: "inherit",
-              }}
-            >
-              <LogoutRounded fontSize="small" />
+            <ListItemIcon sx={{ minWidth: 30, color: 'inherit' }}>
+              <ShieldOutlined fontSize="small" />
             </ListItemIcon>
-
-            <ListItemText
-              primary="Logout"
-              sx={{
-                "& .MuiListItemText-primary": {
-                  fontSize: "0.8125rem",
-
-                  fontWeight: 500,
-                },
-              }}
-            />
+            <ListItemText primary={t('security')} sx={{ '& .MuiListItemText-primary': {
+              fontSize: '0.8125rem', fontWeight: isSecurityActive ? 600 : 500,
+            } }} />
           </ListItemButton>
+
         </List>
       </Collapse>
     </Box>
@@ -464,30 +454,13 @@ function NavItem({
 
           color: active ? sidenav.contrast : sideNavTheme.text,
 
-          background: active
-            ? `linear-gradient(
-                135deg,
-                ${sidenav.main} 0%,
-                ${sidenav.dark} 100%
-              )`
-            : "transparent",
-
-          boxShadow: active ? `0 4px 12px ${sidenav.main}40` : "none",
+          backgroundColor: active ? sidenav.main : "transparent",
+          boxShadow: "none",
 
           justifyContent: isMini ? "center" : "flex-start",
 
-          transition:
-            "background 250ms ease, color 200ms ease, box-shadow 250ms ease",
-
-          "&:hover": {
-            background: active
-              ? `linear-gradient(
-                  135deg,
-                  ${sidenav.main},
-                  ${sidenav.dark}
-                )`
-              : `${sidenav.main}10`,
-          },
+          transition: "background-color 150ms ease, color 150ms ease",
+          "&:hover": { backgroundColor: active ? sidenav.dark : `${sidenav.main}10` },
         }}
       >
         <ListItemIcon
@@ -553,6 +526,8 @@ function NavItem({
    ========================================================= */
 
 export default function Sidenav() {
+  const { t } = useLocale();
+  const { user } = useSession();
   const [controller, dispatch] = useMaterialController();
 
   const { openSidenav, isMini, darkMode, sidenavColor } = controller;
@@ -583,7 +558,7 @@ export default function Sidenav() {
     setOpenMenu((previous) => (previous === label ? null : label));
   };
 
-  return (
+  return (<>
     <Drawer
       variant="permanent"
       open
@@ -614,7 +589,7 @@ export default function Sidenav() {
 
           transform: openSidenav ? "translateX(0)" : "translateX(-120%)",
 
-          transition: "width 300ms ease, transform 300ms ease",
+          transition: "width 220ms cubic-bezier(.2, 0, 0, 1), transform 220ms cubic-bezier(.2, 0, 0, 1)",
 
           overflowX: "hidden",
 
@@ -640,11 +615,11 @@ export default function Sidenav() {
 
           justifyContent: isMini ? "center" : "flex-start",
 
-          gap: 1.5,
+          gap: 1,
 
           minHeight: 64,
 
-          transition: "all 300ms ease",
+          transition: "padding 220ms ease, gap 220ms ease",
         }}
       >
         <Box
@@ -654,7 +629,7 @@ export default function Sidenav() {
               ? logoDark
               : logoLight
           }
-          alt="DawaKhana"
+          alt="EMS"
           sx={{
             width: 32,
             height: 32,
@@ -669,7 +644,8 @@ export default function Sidenav() {
           <Box
             sx={{
               overflow: "hidden",
-
+              minWidth: 0,
+              flex: 1,
               whiteSpace: "nowrap",
             }}
           >
@@ -683,16 +659,19 @@ export default function Sidenav() {
                 color: sideNavTheme.text,
               }}
             >
-              DawaKhana
+              EMS
             </Typography>
 
             <Typography
               variant="caption"
               sx={{
+                display: "block",
+                lineHeight: 1.2,
+                mt: 0.25,
                 color: sideNavTheme.textSecondary,
               }}
             >
-              Pharmacy Management
+              Exchange Management
             </Typography>
           </Box>
         )}
@@ -716,8 +695,8 @@ export default function Sidenav() {
           ================================================= */}
 
       <ProfileNav
-        full_name="Ali Abdullah Nasiri"
-        email="nasiri.aliabdullah@gmail.com"
+        full_name={fullName(user)}
+        email={user?.email || ""}
       />
 
       {/* =================================================
@@ -746,6 +725,7 @@ export default function Sidenav() {
           <NavItem
             key={item.label}
             {...item}
+            label={item.path === "/dashboard" ? t("dashboard") : item.label}
             sidenavColor={sidenavColor}
             isMini={isMini}
             openMenu={openMenu}
@@ -753,6 +733,6 @@ export default function Sidenav() {
           />
         ))}
       </List>
-    </Drawer>
+    </Drawer></>
   );
 }

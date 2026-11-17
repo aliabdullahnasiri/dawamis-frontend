@@ -1,0 +1,2 @@
+:focus-visible { outline: 3px solid #256ae0; outline-offset: 3px; }
+@media print { body * { visibility: hidden; } .receipt, .receipt * { visibility: visible; } .receipt { position: absolute; inset: 0; color: black; background: white; } }
