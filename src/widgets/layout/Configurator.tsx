@@ -1,3 +1,5 @@
+import LocaleControl from "@/components/shared/LocaleControl";
+import { useLocale } from "@/i18n/locale";
 import {
   Box,
   Button,
@@ -25,6 +27,7 @@ import { useMaterialController } from "@/context/useMaterialController";
 import { sidenavColorMap } from "@/constants/sidenav";
 
 export default function Configurator() {
+  const { t } = useLocale();
   const [controller, dispatch] = useMaterialController();
 
   const {
@@ -69,15 +72,15 @@ export default function Configurator() {
             color="text.primary"
             sx={{ fontWeight: "bold" }}
           >
-            DawaKhana Settings
+            {t("settings")}
           </Typography>
 
           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-            Customize your pharmacy dashboard.
+            {t("customize")}
           </Typography>
         </Box>
 
-        <IconButton onClick={() => setOpenConfigurator(dispatch, false)}>
+        <IconButton aria-label={t("close")} onClick={() => setOpenConfigurator(dispatch, false)}>
           <CloseIcon />
         </IconButton>
       </Box>
@@ -92,7 +95,7 @@ export default function Configurator() {
             fontWeight: "bold",
           }}
         >
-          Appearance
+          {t("appearance")}
         </Typography>
 
         <Box
@@ -104,10 +107,10 @@ export default function Configurator() {
           }}
         >
           <Box>
-            <Typography variant="body1">Dark Mode</Typography>
+            <Typography variant="body1">{t("darkMode")}</Typography>
 
             <Typography variant="body2" color="text.secondary">
-              Use dark theme for the dashboard.
+              {t("darkHelp")}
             </Typography>
           </Box>
 
@@ -127,7 +130,7 @@ export default function Configurator() {
           color="text.primary"
           sx={{ fontWeight: "bold" }}
         >
-          Sidenav Colors
+          {t("colors")}
         </Typography>
 
         <Typography
@@ -135,7 +138,7 @@ export default function Configurator() {
           color="text.secondary"
           sx={{ mt: 0.5, mb: 2 }}
         >
-          Choose a color for your sidebar.
+          {t("colorHelp")}
         </Typography>
 
         <Stack direction="row" spacing={1.5}>
@@ -143,7 +146,7 @@ export default function Configurator() {
             const selected = sidenavColor === name;
 
             return (
-              <Box
+              <Box component="button" type="button" aria-label={name} aria-pressed={selected}
                 key={name}
                 onClick={() => setSidenavColor(dispatch, name)}
                 sx={{
@@ -193,7 +196,7 @@ export default function Configurator() {
       {/* Sidenav Theme */}
       <Box sx={{ py: 4 }}>
         <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-          Sidenav Theme
+          {t("sideTheme")}
         </Typography>
 
         <Typography
@@ -201,7 +204,7 @@ export default function Configurator() {
           color="text.secondary"
           sx={{ mt: 0.5, mb: 2 }}
         >
-          Choose how the sidebar should look.
+          {t("sideHelp")}
         </Typography>
 
         <Stack direction="row" spacing={1}>
@@ -209,24 +212,28 @@ export default function Configurator() {
             variant={sidenavTheme === "dark" ? "contained" : "outlined"}
             onClick={() => setSidenavTheme(dispatch, "dark")}
           >
-            Dark
+            {t("dark")}
           </Button>
 
           <Button
             variant={sidenavTheme === "transparent" ? "contained" : "outlined"}
             onClick={() => setSidenavTheme(dispatch, "transparent")}
           >
-            Transparent
+            {t("transparent")}
           </Button>
 
           <Button
             variant={sidenavTheme === "white" ? "contained" : "outlined"}
             onClick={() => setSidenavTheme(dispatch, "white")}
           >
-            White
+            {t("white")}
           </Button>
         </Stack>
       </Box>
+
+      <Divider />
+
+      <Box sx={{ py: 3 }}><LocaleControl /></Box>
 
       <Divider />
 
@@ -241,11 +248,11 @@ export default function Configurator() {
       >
         <Box>
           <Typography variant="body1" sx={{ fontWeight: "medium" }}>
-            Fixed Navbar
+            {t("fixed")}
           </Typography>
 
           <Typography variant="body2" color="text.secondary">
-            Keep the navbar at the top.
+            {t("fixedHelp")}
           </Typography>
         </Box>
 
@@ -265,11 +272,11 @@ export default function Configurator() {
       >
         <Box>
           <Typography variant="body1" sx={{ fontWeight: "medium" }}>
-            Mini Sidebar
+            {t("mini")}
           </Typography>
 
           <Typography variant="body2" color="text.secondary">
-            Collapse the sidebar to a smaller size.
+            {t("miniHelp")}
           </Typography>
         </Box>
 
