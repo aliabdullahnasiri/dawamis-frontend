@@ -1,0 +1,26 @@
+/* Keep document scrolling in one viewport; overlays retain their own scroll areas. */
+html, body, #root { height: 100%; }
+body { overflow: hidden; }
+#root { position: relative; height: 100dvh; overflow: auto; }
+
+.ps > .ps__rail-y { width: 12px; z-index: 2; }
+.ps > .ps__rail-x { height: 12px; z-index: 2; }
+.ps > .ps__rail-y > .ps__thumb-y { width: 6px; right: 3px; border-radius: 8px; background-color: #94a3b8; }
+.ps > .ps__rail-x > .ps__thumb-x { height: 6px; bottom: 3px; border-radius: 8px; background-color: #94a3b8; }
+.ps:hover > .ps__rail-y, .ps:hover > .ps__rail-x,
+.ps:focus-within > .ps__rail-y, .ps:focus-within > .ps__rail-x { opacity: .65; }
+.ps > .ps__rail-y:hover, .ps > .ps__rail-x:hover,
+.ps > .ps__rail-y.ps--clicking, .ps > .ps__rail-x.ps--clicking { background-color: transparent; opacity: 1; }
+.ps > .ps__rail-y:hover > .ps__thumb-y, .ps > .ps__rail-y.ps--clicking > .ps__thumb-y { width: 8px; background-color: #64748b; }
+.ps > .ps__rail-x:hover > .ps__thumb-x, .ps > .ps__rail-x.ps--clicking > .ps__thumb-x { height: 8px; background-color: #64748b; }
+[dir="rtl"] .ps > .ps__rail-y { right: auto !important; left: 0 !important; }
+/* Editable controls retain native scrolling with the same quiet appearance. */
+textarea, select { scrollbar-width: thin; scrollbar-color: #94a3b8 transparent; }
+@media (prefers-reduced-motion: reduce) {
+ .ps__rail-x, .ps__rail-y, .ps__thumb-x, .ps__thumb-y { transition: none !important; }
+}
+@media print {
+ body, #root { height: auto; overflow: visible !important; }
+ .ps { overflow: visible !important; }
+ .ps__rail-x, .ps__rail-y { display: none !important; }
+}
