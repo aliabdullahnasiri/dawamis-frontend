@@ -1,4 +1,4 @@
-import { afterEach, expect, test } from 'vitest';
+import { afterEach, expect, test, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import Navbar from '../src/widgets/layout/NavBar';
@@ -36,4 +36,63 @@ test('Spotlight supports arrow-key selection, Enter, and Escape', async () => {
  fireEvent.keyDown(search,{key:'Enter'});expect(await screen.findByText('Profile destination')).toBeTruthy();
  fireEvent.keyDown(document,{key:'k',ctrlKey:true});const reopened=await screen.findByRole('combobox',{name:'Search pages and shortcuts'});
  expect((reopened as HTMLInputElement).value).toBe('');fireEvent.keyDown(reopened,{key:'Escape'});await waitFor(()=>expect(screen.queryByRole('combobox')).toBeNull());
+});
+
+test('Spotlight runs appearance, sidebar, and settings actions with the keyboard', async () => {
+ mount();
+ async function run(query: string) {
+  fireEvent.keyDown(document, { key: 'k', ctrlKey: true });
+  const search = await screen.findByRole('combobox', { name: 'Search pages and shortcuts' });
+  fireEvent.change(search, { target: { value: query } });
+  fireEvent.keyDown(search, { key: 'Enter' });
+  await waitFor(() => expect(screen.queryByRole('combobox')).toBeNull());
+ }
+ await run('dark mode');
+ expect(screen.getByRole('button', { name: 'Use light theme' })).toBeTruthy();
+ await run('white mode');
+ expect(screen.getByRole('button', { name: 'Use dark theme' })).toBeTruthy();
+ await run('toggle sidebar');
+ expect(screen.getByRole('button', { name: 'Open navigation' })).toBeTruthy();
+ await run('open settings');
+ expect(await screen.findByText('Appearance')).toBeTruthy();
+});
+
+test('Spotlight changes language directly', async () => {
+ mount();fireEvent.keyDown(document, { key: 'k', ctrlKey: true });
+ const search = await screen.findByRole('combobox', { name: 'Search pages and shortcuts' });
+ fireEvent.change(search, { target: { value: 'Dari' } });
+ fireEvent.keyDown(search, { key: 'Enter' });
+ expect(await screen.findByRole('button', { name: 'جستجوی صفحه' })).toBeTruthy();
+ expect(screen.getByText('Workspace home')).toBeTruthy();
+});
+
+
+test('Spotlight enters and exits fullscreen when supported', async () => {
+ const enter = vi.fn().mockResolvedValue(undefined);
+ const exit = vi.fn().mockResolvedValue(undefined);
+ Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: true });
+ Object.defineProperty(document.documentElement, 'requestFullscreen', { configurable: true, value: enter });
+ Object.defineProperty(document, 'exitFullscreen', { configurable: true, value: exit });
+ try {
+  mount();
+  fireEvent.keyDown(document, { key: 'k', ctrlKey: true });
+  const search = await screen.findByRole('combobox', { name: 'Search pages and shortcuts' });
+  fireEvent.change(search, { target: { value: 'fullscreen' } });
+  fireEvent.keyDown(search, { key: 'Enter' });
+  expect(enter).toHaveBeenCalledOnce();
+  await waitFor(() => expect(screen.queryByRole('combobox')).toBeNull());
+  Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: document.documentElement });
+  fireEvent(document, new Event('fullscreenchange'));
+  fireEvent.keyDown(document, { key: 'k', ctrlKey: true });
+  const reopened = await screen.findByRole('combobox', { name: 'Search pages and shortcuts' });
+  fireEvent.change(reopened, { target: { value: 'fullscreen' } });
+  expect(screen.getByRole('option', { name: 'Exit full screen' })).toBeTruthy();
+  fireEvent.keyDown(reopened, { key: 'Enter' });
+  expect(exit).toHaveBeenCalledOnce();
+ } finally {
+  Reflect.deleteProperty(document, 'fullscreenEnabled');
+  Reflect.deleteProperty(document, 'fullscreenElement');
+  Reflect.deleteProperty(document, 'exitFullscreen');
+  Reflect.deleteProperty(document.documentElement, 'requestFullscreen');
+ }
 });
