@@ -17,7 +17,7 @@ The navbar already implements a working Ctrl/Cmd+K page palette.
 - Ink: #0f172a; secondary text: #64748b; divider: #e2e8f0.
 - Canvas: #f8fafc; surface: #ffffff; action: #256ae0.
 - Dark mode uses existing neutral surfaces and #60a5ff for actions.
-- Public Sans for English, Vazirmatn for Dari, Noto Naskh Arabic for Pashto.
+- Public Sans for Latin text; Noto Sans Arabic for Dari and Pashto, with Vazirmatn as a fallback. RTL text uses zero letter spacing and generous line height (1.5 for headings, 1.75 for body text).
 - Heading scale: 36, 30, 26, 24, 20, 18 px; body: 15 px; small: 13 px.
 - Surfaces: 16 px corners, a subtle border, no decorative gradients or repeated shadows.
 - Inputs/buttons: 10 px corners; visible focus; floating labels; no required asterisks.
