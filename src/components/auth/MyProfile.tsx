@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Alert, Avatar, Box, Button, Container, Divider, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Container, IconButton, Tooltip, Divider, Paper, Stack, TextField, Typography } from '@mui/material';
 import { ArrowBackOutlined, SettingsOutlined, ShieldOutlined } from '@mui/icons-material';
 import { alpha } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -30,7 +30,7 @@ export function MyProfile() {
  const panel = { p: { xs: 2.5, md: 3.5 }, border: 1, borderColor: 'divider', boxShadow: 'none' };
  const names = ['first_name', 'middle_name', 'last_name'] as const;
  return <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}><Stack spacing={3}>
-  <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}><Button component={Link} to="/dashboard" startIcon={<ArrowBackOutlined sx={{ '[dir=rtl] &': { transform: 'rotate(180deg)' } }}/>}>{t('back')}</Button><Stack direction="row" spacing={1}><Button startIcon={<SettingsOutlined/>} onClick={() => setOpenConfigurator(dispatch, true)}>{ui('settings')}</Button><AccountMenu/></Stack></Stack>
+  <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}><Button component={Link} to="/dashboard" startIcon={<ArrowBackOutlined sx={{ '[dir=rtl] &': { transform: 'rotate(180deg)' } }}/>}>{t('back')}</Button><Stack direction="row" spacing={1}><Tooltip title={ui('settings')}><IconButton aria-label={ui('settings')} onClick={() => setOpenConfigurator(dispatch, true)} sx={{ p: .5, minWidth: 44, minHeight: 44 }}><Avatar sx={{ width: 36, height: 36, bgcolor: theme => alpha(theme.palette.primary.main, .12), color: 'primary.main' }}><SettingsOutlined fontSize="small"/></Avatar></IconButton></Tooltip><AccountMenu/></Stack></Stack>
   <Paper data-motion-panel sx={{ ...panel, borderTop: 3, borderTopColor: 'primary.main' }}><Stack direction="row" spacing={2.5} sx={{ alignItems: 'center' }}><Avatar sx={{ width: { xs: 64, sm: 80 }, height: { xs: 64, sm: 80 }, borderRadius: '24px', fontSize: 26, fontWeight: 600, bgcolor: theme => alpha(theme.palette.primary.main, .1), color: 'primary.main' }}>{initials(name)}</Avatar><Box sx={{ minWidth: 0 }}><Typography component="h1" variant="h4" sx={{ fontSize: { xs: 26, md: 32 } }}>{t('profile')}</Typography><Typography sx={{ mt: .75, fontWeight: 600, overflowWrap: 'anywhere' }}>{name}</Typography><Typography variant="body2" color="text.secondary" dir="auto" sx={{ overflowWrap: 'anywhere' }}>{user?.email}</Typography></Box></Stack></Paper>
   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: 3, alignItems: 'start' }}>
    <Paper data-motion-panel sx={panel}><Stack component="form" spacing={3} noValidate aria-busy={busy} onChange={() => { setSaved(false); setError(undefined); }} onSubmit={async event => {
