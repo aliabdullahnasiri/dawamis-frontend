@@ -11,7 +11,7 @@ const common: ThemeOptions = {
   },
   typography: {
     fontFamily:
-      '"Public Sans", "Vazirmatn", sans-serif',
+      '"Public Sans", "Noto Sans Arabic", "Vazirmatn", sans-serif',
 
     h1: {
       fontSize: "2.25rem",
