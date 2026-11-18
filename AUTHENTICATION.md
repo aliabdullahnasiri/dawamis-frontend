@@ -8,9 +8,10 @@ Implements backend PLAN.md Phase 1 in the frontend (authentication is Phase 2 in
 - `/register`: account registration with explicit consent; registration does not sign in automatically.
 - `/forgot-password`, `/reset-password`: email request and token-based reset.
 - `/verify-email`, `/resend-verification`: verification and resend. Email-link query tokens are read into the form and removed from browser history by replacing the URL.
+- `/profile`: edit personal details through `PATCH /users/me`.
 - `/account/security`: current account, password change, session listing/revocation, revoke-all, OTP/TOTP setup, OTP resend, disable, and replacement recovery codes.
 
-Dashboard and account routes require a session verified by `/auth/me`. Organization context is fetched separately; no selected organization does not prevent access to account security. Organization management and profile editing belong to subsequent integration work.
+Dashboard and account routes require a session verified by `/auth/me`. Organization context is fetched separately; no selected organization does not prevent access to account security. Organization management belongs to phase 3.
 
 ## Storage and lifecycle
 
@@ -28,4 +29,4 @@ The sibling backend changes preserve the enabled OTP secret, reject enablement w
 
 ## Verification
 
-`npm run build`, `npm run lint`, and `npm test`. Frontend tests use mocked HTTP responses in jsdom; backend tests exercise real ASGI routes with SQLite, fake Redis, and mocked email delivery. No live SMTP delivery, production database, real-browser end-to-end or packaged Tauri acceptance is claimed.
+`npm run build`, `npm run lint`, and `npm test`. Frontend tests use mocked HTTP responses in jsdom; backend tests exercise real ASGI routes with SQLite, fake Redis, and mocked email delivery. The phase 0–2 browser checks in PLAN.md exercise the live login denial path. Live SMTP delivery and packaged Tauri acceptance remain pending.
