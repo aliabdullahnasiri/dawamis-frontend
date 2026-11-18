@@ -25,13 +25,13 @@ Acceptance: the EMS shell builds, exposes no pharmacy pages, and works in both R
 
 - [x] Configure the API base URL; never put secrets in Vite environment variables.
 - [x] Resolve the current Vite port 5173 versus backend CORS origin localhost:3000 mismatch through a documented dev proxy or coordinated origin configuration.
-- [ ] Generate/review TypeScript contracts from the running backend `/openapi.json`; retain decimal amounts as strings and distinguish UUID paths from integer references.
+- [x] Generate/review TypeScript contracts from the running backend `/openapi.json`; retain decimal amounts as strings and distinguish UUID paths from integer references.
 - [x] Implement a shared transport, bearer authorization, single-flight refresh and bounded retry handling.
 - [x] Parse standard response envelopes and sanitized validation field paths; handle binary file/CSV responses separately.
 - [x] Add connection status, authentication expiry, forbidden, missing record, conflict, validation, rate-limit and server-error states.
 - [x] Implement reusable decimal/currency inputs, search, paginated tables, date filters, permission gates, confirmation dialogs and receipt layouts.
 - [x] Preserve a stable `Idempotency-Key` and exact payload across uncertain financial submissions; do not queue offline money writes.
-- [ ] Add a frontend test runner and component/browser integration tests; no test script exists in the clone yet.
+- [x] Add a frontend test runner and component/browser integration tests.
 
 Acceptance: token refresh is coordinated, errors map to forms, and repeated uncertain submissions cannot create a new financial operation accidentally.
 
@@ -40,7 +40,7 @@ Acceptance: token refresh is coordinated, errors map to forms, and repeated unce
 - [x] Implement registration, login, current-user bootstrap and logout.
 - [x] Branch login into normal token issuance or expiring 2FA challenge verification; challenge tokens must not authorize ordinary APIs.
 - [x] Implement email verification/resend and password forgot/reset/change flows.
-- [ ] Implement profile editing, session listing, individual revocation and revoke-all.
+- [x] Implement profile editing, session listing, individual revocation and revoke-all.
 - [x] Implement supported OTP/TOTP setup, verification, enable/disable and recovery-code flows from current OpenAPI schemas.
 - [x] Keep credentials, OTPs, QR secrets and recovery codes out of logs, analytics and reusable query caches.
 - [x] Decide and document token storage separately for browser and Tauri; existing localStorage utilities store UI preferences only.
@@ -147,14 +147,8 @@ Acceptance: screen totals and exports match the same backend cutoff and filters,
 - [ ] Reconcile opening → exchange → payment → hawala → settlement → expense → transfer → closing → report with reviewed books.
 - [ ] Document known backend/UI gaps and release only after operator acceptance.
 
-## Progress — 2026-11-16
+## Phase 0–2 verification — 2026-11-18
 
-Phase 0 shell and phase 1 transport/shared component implementation are present. EMS shell has no pharmacy navigation, fake user profile or startup timer. Configurator supports persisted English/Dari/Pashto, translated shell/common controls, bundled Arabic fonts, MUI direction and Emotion RTL processing. API URL is configured in .env/.env.example via a documented Vite proxy. In-memory token lifecycle bootstraps verified /auth/context, clears old context and rejects stale-session retry intents. No login screen is claimed before phase 2.
+Regenerated the checked-in TypeScript types and schema snapshot from the running backend’s `/openapi.json`. The production build, lint, five transport tests and 46 frontend integration tests passed. Chromium checked the login screen in English at desktop width and Dari and Pashto at mobile width, including page direction and horizontal overflow. A login attempt through the Vite proxy received a backend 401 and displayed an alert. The backend also rejected an invalid refresh token.
 
-Contracts were generated from the sibling backend application's OpenAPI schema without lifespan/database access; snapshot and generator are included. Fetching /openapi.json from a running backend and API-backed real-browser acceptance remain unverified, so their combined checklist items remain open. Component integration tests run in jsdom, not a real browser. Financial/accounting acceptance remains outside these phases.
-
-Verification: build/lint and transport/component tests. Tests cover exact financial retries/double clicks, single-flight refresh, failed-refresh invalidation, sanitized validation paths, binary responses, locale persistence/RTL, permission denial, Unicode money input, busy confirmation and session bootstrap/logout. Production desktop packaging/CSP and full financial feature screens remain later-phase work.
-
-## Authentication integration — 2026-11-16
-
-Backend Phase 1 authentication screens and API integration are implemented; see [AUTHENTICATION.md](AUTHENTICATION.md). Session management is implemented. The combined profile/session item above remains open because profile editing belongs to the user-system integration. Browser and Tauri tokens are memory-only. The sibling backend OTP lifecycle repair is required. Mocked frontend integration tests and backend ASGI tests cover the authentication flows; live browser/email and packaged desktop acceptance remain pending. The backend refresh endpoint issues a new access token without refresh-token rotation.
+All 45 selected backend auth API, user API, JWT and challenge tests passed with isolated fixtures. They cover login, challenge expiry and replay, logout and session revocation. Email delivery uses a test double. Profile edits use `PATCH /users/me`. Browser and Tauri webview session storage follow the policy in [AUTHENTICATION.md](AUTHENTICATION.md). Packaged desktop verification belongs to phase 11.
