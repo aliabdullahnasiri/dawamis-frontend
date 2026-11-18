@@ -42,6 +42,18 @@ export default function Navbar() {
   document.addEventListener('keydown', keyboard); document.addEventListener('fullscreenchange', changed);
   return () => { document.removeEventListener('keydown', keyboard); document.removeEventListener('fullscreenchange', changed); };
  }, []);
+ const toggleFullscreen = () => {
+  const operation = document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+  void operation.catch(() => {});
+ };
+ const actions = [
+  ...languages.map(language => ({ id: `language-${language.value}`, label: `${t('language')}: ${language.label}`, icon: LanguageOutlined, keywords: `language lang change ${language.value} ${language.value === 'fa' ? 'Dari Persian' : language.value === 'ps' ? 'Pashto' : 'English'}`, onSelect: () => setLocale(language.value) })),
+  { id: 'dark-mode', label: text('darkTheme'), icon: DarkModeOutlined, keywords: 'dark mode theme', onSelect: () => setDarkMode(dispatch, true) },
+  { id: 'light-mode', label: text('lightTheme'), icon: LightModeOutlined, keywords: 'light white mode theme', onSelect: () => setDarkMode(dispatch, false) },
+  ...(document.fullscreenEnabled ? [{ id: 'fullscreen', label: text(fullscreen ? 'exitFullscreen' : 'enterFullscreen'), icon: fullscreen ? FullscreenExitRounded : FullscreenRounded, keywords: 'fullscreen full screen toggle', onSelect: toggleFullscreen }] : []),
+  { id: 'sidebar', label: text(openSidenav ? 'closeNavigation' : 'openNavigation'), icon: MenuRounded, keywords: 'toggle sidebar side bar navigation', onSelect: () => setOpenSidenav(dispatch, !openSidenav) },
+  { id: 'settings', label: t('settings'), icon: SettingsOutlined, keywords: 'open settings preferences', onSelect: () => setOpenConfigurator(dispatch, true) },
+ ];
  const iconStyle = { width: 42, height: 42, color: 'text.secondary', flexShrink: 0 };
  return <>
   <AppBar position={fixedNavbar ? 'sticky' : 'relative'} elevation={0} sx={theme => ({ top: fixedNavbar ? 16 : undefined, color: 'text.primary', borderRadius: '14px', bgcolor: fixedNavbar ? alpha(theme.palette.background.paper, .94) : 'background.paper', border: 1, borderColor: 'divider', mb: 3, ...(fixedNavbar ? { backdropFilter: 'blur(12px)' } : {}) })}>
@@ -55,13 +67,13 @@ export default function Navbar() {
      <Tooltip title={text(darkMode ? 'lightTheme' : 'darkTheme')}><IconButton aria-label={text(darkMode ? 'lightTheme' : 'darkTheme')} onClick={() => setDarkMode(dispatch, !darkMode)} sx={iconStyle}>{darkMode ? <LightModeOutlined fontSize="small"/> : <DarkModeOutlined fontSize="small"/>}</IconButton></Tooltip>
      <Tooltip title={t('language')}><IconButton aria-label={t('language')} aria-haspopup="menu" aria-expanded={!!languageAnchor} aria-controls={languageAnchor ? languageId : undefined} onClick={event => setLanguageAnchor(event.currentTarget)} sx={iconStyle}><LanguageOutlined fontSize="small"/></IconButton></Tooltip>
      <Tooltip title={t('settings')}><IconButton aria-label={t('settings')} onClick={() => setOpenConfigurator(dispatch, true)} sx={iconStyle}><SettingsOutlined fontSize="small"/></IconButton></Tooltip>
-     {typeof document !== 'undefined' && document.fullscreenEnabled && <Tooltip title={text(fullscreen ? 'exitFullscreen' : 'enterFullscreen')}><IconButton aria-label={text(fullscreen ? 'exitFullscreen' : 'enterFullscreen')} onClick={() => { const operation = document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); void operation.catch(() => {}); }} sx={{ ...iconStyle, display: { xs: 'none', md: 'inline-flex' } }}>{fullscreen ? <FullscreenExitRounded/> : <FullscreenRounded/>}</IconButton></Tooltip>}
+     {typeof document !== 'undefined' && document.fullscreenEnabled && <Tooltip title={text(fullscreen ? 'exitFullscreen' : 'enterFullscreen')}><IconButton aria-label={text(fullscreen ? 'exitFullscreen' : 'enterFullscreen')} onClick={toggleFullscreen} sx={{ ...iconStyle, display: { xs: 'none', md: 'inline-flex' } }}>{fullscreen ? <FullscreenExitRounded/> : <FullscreenRounded/>}</IconButton></Tooltip>}
      <Tooltip title={text(openSidenav ? 'closeNavigation' : 'openNavigation')}><IconButton aria-label={text(openSidenav ? 'closeNavigation' : 'openNavigation')} aria-expanded={openSidenav} onClick={() => setOpenSidenav(dispatch, !openSidenav)} sx={iconStyle}><MenuRounded/></IconButton></Tooltip>
      <Divider orientation="vertical" flexItem sx={{ mx: .5, my: 1 }}/><AccountMenu/>
     </Stack>
    </Toolbar>
   </AppBar>
   <Menu id={languageId} anchorEl={languageAnchor} open={!!languageAnchor} onClose={() => setLanguageAnchor(null)} slotProps={{ paper: { sx: { minWidth: 170, mt: 1, border: 1, borderColor: 'divider' } } }}>{languages.map(language => <MenuItem key={language.value} lang={language.value} selected={locale === language.value} onClick={() => { setLocale(language.value); setLanguageAnchor(null); }} sx={{ minHeight: 46, gap: 2 }}><Typography sx={{ flex: 1 }}>{language.label}</Typography>{locale === language.value && <CheckRounded fontSize="small" color="primary"/>}</MenuItem>)}</Menu>
-  {searchOpen && <SpotlightSearch pages={navigation} onClose={closeSearch}/>}
+  {searchOpen && <SpotlightSearch pages={navigation} actions={actions} onClose={closeSearch}/>}
  </>;
 }
