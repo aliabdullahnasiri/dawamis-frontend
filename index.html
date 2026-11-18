@@ -5,9 +5,48 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ems-frontend</title>
+    <style>
+      .ems-startup {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 1rem;
+        color-scheme: light dark;
+        background: Canvas;
+      }
+      .ems-loading-mark {
+        display: grid;
+        place-items: center;
+      }
+      .ems-loading-mark > * { grid-area: 1 / 1; }
+      .ems-loading-spinner {
+        display: block;
+        box-sizing: border-box;
+        width: 3.75rem;
+        height: 3.75rem;
+        color: #508bea;
+        border: 2px solid color-mix(in srgb, currentColor 25%, transparent);
+        border-top-color: currentColor;
+        border-radius: 50%;
+        animation: ems-spin .8s linear infinite;
+      }
+      @keyframes ems-spin { to { transform: rotate(1turn); } }
+      @media (prefers-reduced-motion: reduce) {
+        .ems-loading-spinner { animation: none; }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="ems-startup">
+        <div class="ems-loading-mark" role="status" aria-label="Loading EMS">
+          <span class="ems-loading-spinner"></span>
+          <img src="/favicon.svg" alt="" width="34" height="34" />
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
