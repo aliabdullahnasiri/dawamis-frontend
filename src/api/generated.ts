@@ -167,6 +167,6 @@ export type UpdateOrganizationRequest = { "name"?: string | null; "slug"?: strin
 export type UpdateRoleRequest = { "name"?: string | null; "description"?: string | null };
 export type UpdateUserRequest = { "first_name"?: string | null; "middle_name"?: string | null; "last_name"?: string | null; "user_name"?: string | null; "email"?: string | null; "birthday"?: string | null };
 export type UpdateUsernameRequest = { "user_name": string };
-export type UserData = { "uuid": string; "first_name": string | null; "middle_name": string | null; "last_name": string | null; "user_name": string; "email": string; "birthday": string | null; "created_at": string; "updated_at": string; "two_factor_enabled"?: boolean; "two_factor_method"?: string | null };
+export type UserData = { "uuid": string; "first_name": string | null; "middle_name": string | null; "last_name": string | null; "user_name": string; "email": string; "two_factor_enabled"?: boolean; "two_factor_method"?: string | null; "birthday": string | null; "created_at": string; "updated_at": string };
 export type ValidationError = { "loc": (string | number)[]; "msg": string; "type": string; "input"?: unknown; "ctx"?: Record<string, unknown> };
 export type VerifyEmailRequest = { "token": string };
