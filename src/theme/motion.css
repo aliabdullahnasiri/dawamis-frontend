@@ -5,7 +5,19 @@
   --motion-ease: cubic-bezier(.2, 0, 0, 1);
 }
 
-/* One coordinated reveal after the page skeleton finishes. */
+@media (prefers-reduced-motion: no-preference) {
+  .ems-quote-word {
+    display: inline-block;
+    animation: quote-arrive 320ms var(--motion-ease) backwards;
+  }
+  @keyframes quote-arrive {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ems-page-loader[data-leaving="true"] { opacity: 1; transition: none; }
+}
 [data-motion-page="ready"] { animation: page-reveal var(--motion-standard) var(--motion-ease); }
 [data-motion-page="ready"] [data-motion-panel] { animation: panel-reveal var(--motion-enter) var(--motion-ease) backwards; }
 @keyframes page-reveal { from { opacity: .6; } to { opacity: 1; } }
