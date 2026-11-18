@@ -1,4 +1,3 @@
-import { PageLoading } from "@/components/shared/PageLoading";
 import { Protected } from "@/components/shared/Protected";
 import { Route } from "react-router-dom";
 
@@ -26,7 +25,7 @@ export function renderRoutes(items: RouteItem[]): React.ReactNode[] {
         <Route
           key={item.path}
           path={item.path}
-          element={item.permission ? <Protected permission={item.permission}><PageLoading>{item.element}</PageLoading></Protected> : <PageLoading>{item.element}</PageLoading>}
+          element={item.permission ? <Protected permission={item.permission}>{item.element}</Protected> : item.element}
         />,
       );
     }
