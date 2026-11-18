@@ -1,5 +1,6 @@
 import { useLocale } from '../../i18n/locale';
 const words = {
+ searchPagesAndActions: ['Pages and actions', 'صفحه‌ها و عملکردها', 'پاڼې او کړنې'],
  searchPages: ['Pages', 'صفحه‌ها', 'پاڼې'],
  navigateResults: ['Navigate', 'انتخاب', 'ټاکل'],
  openResult: ['Open', 'باز کردن', 'پرانېستل'],
