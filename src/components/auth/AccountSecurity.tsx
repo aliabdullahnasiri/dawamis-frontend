@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Alert, Avatar, Box, Button, Chip, Container, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Paper, Skeleton, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Avatar, Box, Button, Chip, Container, IconButton, Tooltip, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { SettingsOutlined, ArrowBackOutlined, DevicesOutlined, ExpandMore, KeyOutlined, LanguageOutlined, LockOutlined, LogoutOutlined, MailOutlined, RefreshOutlined, ShieldOutlined, SmartphoneOutlined, TabletMacOutlined, ComputerOutlined } from '@mui/icons-material';
 import { alpha } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -65,7 +65,7 @@ export function AccountSecurity() {
  return <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}><Stack spacing={3}>
   <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between", gap: 1, flexWrap: "wrap" }}>
    <Button component={Link} to="/dashboard" startIcon={<ArrowBackOutlined sx={{ '[dir=rtl] &': { transform: 'rotate(180deg)' } }}/>}>{t('back')}</Button>
-   <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}><Button startIcon={<SettingsOutlined/>} onClick={() => setOpenConfigurator(dispatch, true)}>{localeText('settings')}</Button><AccountMenu/></Stack>
+   <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}><Tooltip title={localeText('settings')}><IconButton aria-label={localeText('settings')} onClick={() => setOpenConfigurator(dispatch, true)} sx={{ p: .5, minWidth: 44, minHeight: 44 }}><Avatar sx={{ width: 36, height: 36, bgcolor: theme => alpha(theme.palette.primary.main, .12), color: 'primary.main' }}><SettingsOutlined fontSize="small"/></Avatar></IconButton></Tooltip><AccountMenu/></Stack>
   </Stack>
   <Paper data-motion-panel sx={{ ...panel, py: { xs: 3, md: 4 }, borderTop: 3, borderTopColor: 'primary.main' }}>
    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2.5} sx={{ alignItems: { xs: 'flex-start', sm: 'center' } }}>
