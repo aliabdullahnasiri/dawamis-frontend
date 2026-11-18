@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Avatar, Box, Button, Chip, Container, IconButton, Tooltip, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { SettingsOutlined, ArrowBackOutlined, DevicesOutlined, ExpandMore, KeyOutlined, LanguageOutlined, LockOutlined, LogoutOutlined, MailOutlined, RefreshOutlined, ShieldOutlined, SmartphoneOutlined, TabletMacOutlined, ComputerOutlined } from '@mui/icons-material';
 import { alpha } from '@mui/material/styles';
+import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { auth } from '../../api/auth';
 import type { SessionData, TOTPSetupData } from '../../api/generated';
@@ -26,6 +27,21 @@ function deviceDetails(agent: string | null) {
  const browser = /Edg\//.test(ua) ? 'Microsoft Edge' : /OPR\//.test(ua) ? 'Opera' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : '';
  const os = /iPhone|iPad/.test(ua) ? 'iOS' : /Android/.test(ua) ? 'Android' : /Windows/.test(ua) ? 'Windows' : /Macintosh|Mac OS/.test(ua) ? 'macOS' : /Linux/.test(ua) ? 'Linux' : '';
  return { icon, browser, os };
+}
+
+const relativeTimeUnits = ['year', 'month', 'week', 'day', 'hour', 'minute'] as const;
+
+function sessionTime(value: string | null, now: number, locale: string) {
+ const timestamp = dayjs(value);
+ if (!timestamp.isValid()) return '—';
+
+ const formatter = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: 'short' });
+ const reference = dayjs(now);
+ const unit = relativeTimeUnits.find(candidate => timestamp.diff(reference, candidate) !== 0);
+ const label = unit ? formatter.format(timestamp.diff(reference, unit), unit) : formatter.format(0, 'second');
+ const exact = timestamp.toDate().toLocaleString(locale, { dateStyle: 'medium', timeStyle: 'short' });
+
+ return <time dateTime={timestamp.toISOString()} title={exact}>{label}</time>;
 }
 
 export function AccountSecurity() {
@@ -60,7 +76,11 @@ export function AccountSecurity() {
  const clearSetup = () => { setSetup(undefined); setSetupMethod(undefined); setCodes(undefined); };
  const name = [user?.first_name, user?.middle_name, user?.last_name].map(part => part?.trim()).filter(Boolean).join(' ') || t('profile');
  const initials = avatarInitials(name);
- const date = (value: string | null) => value && !Number.isNaN(Date.parse(value)) ? new Date(value).toLocaleString(locale, { dateStyle: 'medium', timeStyle: 'short' }) : '—';
+ const [now, setNow] = useState(Date.now);
+ useEffect(() => {
+  const timer = window.setInterval(() => setNow(Date.now()), 30_000);
+  return () => window.clearInterval(timer);
+ }, []);
  const panel = { p: { xs: 2.5, md: 3.5 }, border: 1, borderColor: 'divider', boxShadow: 'none' };
  return <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}><Stack spacing={3}>
   <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between", gap: 1, flexWrap: "wrap" }}>
@@ -70,8 +90,12 @@ export function AccountSecurity() {
   <Paper data-motion-panel sx={{ ...panel, py: { xs: 3, md: 4 }, borderTop: 3, borderTopColor: 'primary.main' }}>
    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2.5} sx={{ alignItems: { xs: 'flex-start', sm: 'center' } }}>
     <Avatar sx={{ width: 80, height: 80, fontSize: 28, fontWeight: 600, borderRadius: '24px', bgcolor: theme => alpha(theme.palette.primary.main, .1), color: 'primary.main' }}>{initials}</Avatar>
-    <Box sx={{ minWidth: 0, flex: 1 }}><Typography component="h1" variant="h4" sx={{ fontSize: { xs: 26, md: 32 }, letterSpacing: '-.025em' }}>{t('security')}</Typography><Typography sx={{ mt: 1, fontWeight: 600, overflowWrap: 'anywhere' }}>{name}</Typography><Typography variant="body2" color="text.secondary" dir="auto" sx={{ overflowWrap: 'anywhere' }}>{user?.email}</Typography></Box>
-    <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 250 }}>{t('securityHelp')}</Typography>
+    <Box sx={{ minWidth: 0, maxWidth: '100%', flex: 1, textAlign: 'start' }}>
+     <Typography component="h1" variant="h4" sx={{ fontSize: { xs: 26, md: 32 }, letterSpacing: '-.025em' }}>{t('security')}</Typography>
+     <Typography variant="body2" color="text.secondary" sx={{ mt: .5 }}>{t('securityHelp')}</Typography>
+     <Typography sx={{ mt: 1.5, fontWeight: 600, overflowWrap: 'anywhere' }}><bdi>{name}</bdi></Typography>
+     <Typography variant="body2" color="text.secondary" sx={{ overflowWrap: 'anywhere' }}><bdi dir="ltr">{user?.email}</bdi></Typography>
+    </Box>
    </Stack>
   </Paper>
   {error != null && <Alert severity="error">{error instanceof Error ? error.message : t('retry')}</Alert>}
@@ -107,7 +131,7 @@ export function AccountSecurity() {
    {sessions === undefined && error == null && <Stack role="status" aria-label={t('loadingSessions')} spacing={2}><Skeleton height={64}/><Skeleton height={64}/></Stack>}
    {sessions?.length === 0 && <Stack spacing={1} sx={{ alignItems: "center", py: 4, color: 'text.secondary' }}><DevicesOutlined sx={{ fontSize: 40 }}/><Typography>{t('empty')}</Typography></Stack>}
    {sessions?.map(session => { const device = deviceDetails(session.user_agent); return <Box key={session.uuid} sx={{ borderTop: 1, borderColor: 'divider', pt: 2.5 }}><Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { sm: 'center' } }}>
-    <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}><Avatar variant="rounded" sx={{ width: 48, height: 48, bgcolor: 'action.hover', color: 'text.secondary' }}>{device.icon}</Avatar><Box sx={{ minWidth: 0 }}><Stack direction="row" spacing={1} sx={{ alignItems: "center", flexWrap: "wrap" }}><Typography sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{device.browser || session.user_agent || t('unknownDevice')}</Typography>{device.os && <Chip size="small" variant="outlined" label={device.os}/>}</Stack><Stack direction="row" spacing={.75} sx={{ alignItems: "center", color: "text.secondary", mt: .5 }}><LanguageOutlined sx={{ fontSize: 16 }}/><Typography variant="body2" dir="ltr">{session.ip_address || '—'}</Typography></Stack><Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>{t('activity')}: {date(session.last_used_at)}</Typography><Typography variant="caption" color="text.secondary">{t('expires')}: {date(session.expires_at)}</Typography></Box></Stack>
+    <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}><Avatar variant="rounded" sx={{ width: 48, height: 48, bgcolor: 'action.hover', color: 'text.secondary' }}>{device.icon}</Avatar><Box sx={{ minWidth: 0 }}><Stack direction="row" spacing={1} sx={{ alignItems: "center", flexWrap: "wrap" }}><Typography sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{device.browser || session.user_agent || t('unknownDevice')}</Typography>{device.os && <Chip size="small" variant="outlined" label={device.os}/>}</Stack><Stack direction="row" spacing={.75} sx={{ alignItems: "center", color: "text.secondary", mt: .5 }}><LanguageOutlined sx={{ fontSize: 16 }}/><Typography variant="body2" dir="ltr">{session.ip_address || '—'}</Typography></Stack><Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>{t('activity')}: {sessionTime(session.last_used_at, now, locale)}</Typography><Typography variant="caption" color="text.secondary">{t('expires')}: {sessionTime(session.expires_at, now, locale)}</Typography></Box></Stack>
     <Button color="error" startIcon={<LogoutOutlined/>} disabled={busy} sx={{ alignSelf: { xs: 'flex-end', sm: 'center' }, flexShrink: 0 }} onClick={() => setConfirm(session)}>{t('revoke')}</Button>
    </Stack></Box>; })}
    {!!sessions?.length && <Box sx={{ pt: 2, borderTop: 1, borderColor: 'divider' }}><Button color="error" variant="outlined" startIcon={<KeyOutlined/>} disabled={busy} onClick={() => setConfirm('all')}>{t('revokeAll')}</Button></Box>}
